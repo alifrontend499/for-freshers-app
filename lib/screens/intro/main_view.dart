@@ -40,7 +40,8 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: introAppBar,
+      appBar: getIntroAppBar(context),
+
       body: Container(
         color: Colors.white,
         padding: EdgeInsets.only(bottom: bottomGap),

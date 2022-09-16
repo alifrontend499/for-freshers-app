@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // app bar
 const Size globalSettingsAppBarSize = Size.fromHeight(50);
 const double globalSettingsAppBarLeadingSize = 22;
-const double globalSettingsAppBarLeadingSplashRadius = 17;
+const double globalSettingsAppBarLeadingSplashRadius = 18;
 const double globalSettingsAppBarRightPadding = 14;
 
 // buttons
