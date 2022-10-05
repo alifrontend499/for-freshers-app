@@ -13,15 +13,6 @@ class TestModel {
       });
     }
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    if (items != null) {
-      data['items'] = items!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
 }
 
 class Items {
@@ -35,13 +26,5 @@ class Items {
     testType = json['testType'];
     testName = json['testName'];
     testQuestions = json['testQuestions'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['testType'] = testType;
-    data['testName'] = testName;
-    data['testQuestions'] = testQuestions;
-    return data;
   }
 }

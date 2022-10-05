@@ -145,6 +145,34 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+
+              Column(
+                children: [
+                  // -- child | header
+                  const TestListingHeader(
+                    testType: "Other",
+                    testsCount: 3,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // -- child | bottom sec
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      // -- child | test card
+                      Expanded(
+                        child: TestCard(
+                          testName: 'Practice Test 2',
+                          testType: 'Other',
+                          testQuestions: '20-25',
+                          isPremium: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
