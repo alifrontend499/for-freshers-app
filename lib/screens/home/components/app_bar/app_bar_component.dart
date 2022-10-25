@@ -9,7 +9,10 @@ import 'package:unicons/unicons.dart';
 // -- settings | global
 import 'package:app/global/settings/global_settings.dart';
 
-PreferredSize getHomeAppBar(pageContext) {
+// -- widget | global
+import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
+
+PreferredSize getHomeAppBar(context) {
   PreferredSize appBar = PreferredSize(
     preferredSize: globalSettingsAppBarSize,
     child: AppBar(
@@ -20,12 +23,11 @@ PreferredSize getHomeAppBar(pageContext) {
           UniconsLine.draggabledots,
           size: globalSettingsAppBarLeadingSize,
         ),
-        onPressed: () {},
+        onPressed: () => globalScaffoldKey.currentState?.openDrawer(),
         color: Colors.black,
         splashColor: Colors.transparent,
         splashRadius: globalSettingsAppBarLeadingSplashRadius,
       ),
-
       title: const Text(
         'Ontario',
         style: screenStylesAppBarTitle,

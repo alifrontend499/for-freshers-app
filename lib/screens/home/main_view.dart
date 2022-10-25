@@ -8,6 +8,9 @@ import 'package:app/screens/home/components/app_bar/app_bar_component.dart';
 import 'package:app/screens/home/components/tests_listing/tests_listing_header_component.dart';
 import 'package:app/screens/home/components/tests_listing/test_card_component.dart';
 
+// -- widget | global
+import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
+
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
 
@@ -19,9 +22,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalScaffoldKey,
       backgroundColor: Colors.white,
       appBar: getHomeAppBar(context),
-
+      drawer: const GlobalNavigationDrawer(),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
@@ -36,7 +40,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     testType: screenConstsTestListingTitleEasy,
                     testsCount: 5,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   // -- child | bottom sec
                   Row(
@@ -75,7 +79,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     testType: screenConstsTestListingTitleHard,
                     testsCount: 3,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   // -- child | bottom sec
                   Row(
@@ -114,7 +118,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     testType: screenConstsTestListingTitleHardest,
                     testsCount: 3,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   // -- child | bottom sec
                   Row(
@@ -153,7 +157,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     testType: "Other",
                     testsCount: 3,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   // -- child | bottom sec
                   Row(

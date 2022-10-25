@@ -39,7 +39,7 @@ class TestListingHeader extends StatelessWidget {
           highlightColor: globalColorInkWellHighlight,
           borderRadius: BorderRadius.circular(5),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
             child: Text(
               '$screenConstsViewAll ($testsCount)',
               style: screenStylesTestListingViewAllLink,
@@ -51,4 +51,3 @@ class TestListingHeader extends StatelessWidget {
     );
   }
 }
-

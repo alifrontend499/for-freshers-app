@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:app/utilities/routing/routing.dart' as router;
 import 'package:app/utilities/routing/routing_consts.dart';
 
+// -- theme | global
+import 'package:app/global/theme/globalThemeData.dart';
+
 void main() {
 
   // running the main app
@@ -15,10 +18,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'For Freshers',
       onGenerateRoute: router.generatedRoutes,
       initialRoute: introSliderScreenRoute,
+      theme: getGlobalThemeData(context),
     );
   }
 }
