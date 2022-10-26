@@ -1,3 +1,4 @@
+import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
 import 'package:flutter/material.dart';
 
 // -- colors | global
@@ -16,6 +17,7 @@ class TestCard extends StatelessWidget {
   final String testType;
   final String testName;
   final String testQuestions;
+  final String testDescription;
   final bool isPremium;
 
   const TestCard({
@@ -23,6 +25,7 @@ class TestCard extends StatelessWidget {
     required this.testType,
     required this.testName,
     required this.testQuestions,
+    required this.testDescription,
     required this.isPremium,
   }) : super(key: key);
 
@@ -31,7 +34,7 @@ class TestCard extends StatelessWidget {
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: globalColorInkWellHighlight,
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         decoration: BoxDecoration(
@@ -58,6 +61,16 @@ class TestCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 7),
 
+                if (testDescription != '') ...[
+                  Text(
+                    testDescription,
+                    style: screenStylesTestCardDesc,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 7),
+                ],
+
                 Text(
                   "$testQuestions Questions",
                   style: screenStylesTestCardQuestions,
@@ -66,7 +79,7 @@ class TestCard extends StatelessWidget {
             ),
 
             // -- child | premium icon
-            if(isPremium) ...[
+            if (isPremium) ...[
               const Positioned(
                 right: 0,
                 child: Icon(
@@ -79,7 +92,12 @@ class TestCard extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () {},
+      onTap: () {
+        if (isPremium) {
+          showDialog(
+              context: context, builder: (context) => PremiumTestDialog());
+        }
+      },
     );
   }
 }

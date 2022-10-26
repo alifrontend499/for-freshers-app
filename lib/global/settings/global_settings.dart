@@ -8,4 +8,4 @@ const double globalSettingsAppBarLeadingSplashRadius = 20;
 const double globalSettingsAppBarRightPadding = 14;
 
 // buttons
-const double globalSettingsDefaultButtonHeightN = 47;
+const double globalSettingsDefaultButtonHeight = 47;

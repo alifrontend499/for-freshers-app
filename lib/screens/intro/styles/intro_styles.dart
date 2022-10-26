@@ -13,7 +13,7 @@ const TextStyle screenStylesAppBarActionText =  TextStyle(
 );
 
 ButtonStyle screenStylesBuyNowButton = ElevatedButton.styleFrom(
-  minimumSize: const Size(double.infinity, globalSettingsDefaultButtonHeightN),
+  minimumSize: const Size(double.infinity, globalSettingsDefaultButtonHeight),
   primary: globalColorAppPrimary,
   splashFactory: NoSplash.splashFactory,
   textStyle: const TextStyle(
@@ -25,7 +25,7 @@ ButtonStyle screenStylesBuyNowButton = ElevatedButton.styleFrom(
   )
 );
 ButtonStyle screenStylesBuyNowButton2 = ElevatedButton.styleFrom(
-    minimumSize: const Size(double.infinity, globalSettingsDefaultButtonHeightN),
+    minimumSize: const Size(double.infinity, globalSettingsDefaultButtonHeight),
 );
 
 const TextStyle screenStylesPageHeading =  TextStyle(

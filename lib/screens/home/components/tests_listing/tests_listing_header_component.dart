@@ -9,17 +9,28 @@ import 'package:app/screens/home/styles/home_styles.dart';
 // -- consts | screen
 import 'package:app/screens/home/home_consts.dart';
 
+// -- modals | global
+import 'package:app/global/modals/test_modal.dart';
+
 // -- routes
 import 'package:app/utilities/routing/routing_consts.dart';
+
+// -- screen
+import 'package:app/screens/all_tests/main_view.dart';
+
+// -- package | page transition
+import 'package:page_transition/page_transition.dart';
 
 class TestListingHeader extends StatelessWidget {
   final int testsCount;
   final String testType;
+  final List<TestModal> allTests;
 
   const TestListingHeader({
     Key? key,
     required this.testsCount,
     required this.testType,
+    required this.allTests,
   }) : super(key: key);
 
   @override
@@ -45,7 +56,15 @@ class TestListingHeader extends StatelessWidget {
               style: screenStylesTestListingViewAllLink,
             ),
           ),
-          onTap: () => Navigator.pushNamed(context, homepageScreenRoute),
+          onTap: () => Navigator.of(context).push(
+            PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: AllTestsScreen(
+                testType: testType,
+                allTests: allTests,
+              ),
+            ),
+          ),
         ),
       ],
     );

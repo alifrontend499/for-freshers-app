@@ -11,6 +11,9 @@ import 'package:app/screens/home/components/tests_listing/test_card_component.da
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
+// -- dummy data
+import 'package:app/screens/home/dummy_data.dart';
+
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
 
@@ -36,9 +39,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
               Column(
                 children: [
                   // -- child | header
-                  const TestListingHeader(
+                  TestListingHeader(
                     testType: screenConstsTestListingTitleEasy,
                     testsCount: 5,
+                    allTests: ALL_EASY_TESTS,
                   ),
                   const SizedBox(height: 15),
 
@@ -52,6 +56,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Practice Test 2',
                           testType: 'Easy',
                           testQuestions: '15',
+                          testDescription: '',
                           isPremium: true,
                         ),
                       ),
@@ -63,6 +68,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Test your GK',
                           testType: 'Easy',
                           testQuestions: '10 - 15',
+                          testDescription: '',
                           isPremium: true,
                         ),
                       ),
@@ -75,9 +81,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
               Column(
                 children: [
                   // -- child | header
-                  const TestListingHeader(
+                  TestListingHeader(
                     testType: screenConstsTestListingTitleHard,
                     testsCount: 3,
+                    allTests: ALL_HARD_TESTS,
                   ),
                   const SizedBox(height: 15),
 
@@ -91,6 +98,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Practice Test 2',
                           testType: 'Hard',
                           testQuestions: '15',
+                          testDescription: '',
                           isPremium: false,
                         ),
                       ),
@@ -102,6 +110,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Test your GK',
                           testType: 'Hard',
                           testQuestions: '10 - 15',
+                          testDescription: '',
                           isPremium: false,
                         ),
                       ),
@@ -114,9 +123,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
               Column(
                 children: [
                   // -- child | header
-                  const TestListingHeader(
+                  TestListingHeader(
                     testType: screenConstsTestListingTitleHardest,
                     testsCount: 3,
+                    allTests: ALL_HARDEST_TESTS,
                   ),
                   const SizedBox(height: 15),
 
@@ -130,6 +140,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Practice Test 2',
                           testType: 'Hardest',
                           testQuestions: '15',
+                          testDescription: '',
                           isPremium: false,
                         ),
                       ),
@@ -141,6 +152,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Test your GK',
                           testType: 'Hardest',
                           testQuestions: '10 - 15',
+                          testDescription: '',
                           isPremium: true,
                         ),
                       ),
@@ -153,9 +165,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
               Column(
                 children: [
                   // -- child | header
-                  const TestListingHeader(
+                  TestListingHeader(
                     testType: "Other",
                     testsCount: 3,
+                    allTests: ALL_OTHERS_TESTS,
                   ),
                   const SizedBox(height: 15),
 
@@ -169,6 +182,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testName: 'Practice Test 2',
                           testType: 'Other',
                           testQuestions: '20-25',
+                          testDescription: '',
                           isPremium: false,
                         ),
                       ),

@@ -7,3 +7,8 @@ const TextStyle ndStylesTopBarHead = TextStyle(
 const TextStyle ndStylesTopBarDesc = TextStyle(
   fontSize: 13,
 );
+
+TextStyle ndStylesLinkText({bool isActive = false}) => TextStyle(
+  fontSize: 15,
+  color: isActive ? Colors.white : Colors.black,
+);

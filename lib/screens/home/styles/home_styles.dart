@@ -32,6 +32,11 @@ const TextStyle screenStylesTestCardHeading = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
+const TextStyle screenStylesTestCardDesc = TextStyle(
+  // color: Colors.grey,
+  fontSize: 13,
+);
+
 const TextStyle screenStylesTestCardQuestions = TextStyle(
   color: Colors.grey,
   fontSize: 12,
