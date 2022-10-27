@@ -1,11 +1,15 @@
-import 'package:app/screens/home/components/tests_listing/test_card_component.dart';
 import 'package:flutter/material.dart';
+
+// -- widget | global
+import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
 // -- modals | global
 import 'package:app/global/modals/test_modal.dart';
 
 // -- components | screen
 import 'package:app/screens/all_tests/components/app_bar/app_bar_component.dart';
+import 'package:app/screens/home/components/tests_listing/test_card_component.dart';
+
 
 class AllTestsScreen extends StatefulWidget {
   final String testType;
@@ -27,6 +31,7 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: getAllTestsAppBar(context, widget.testType),
+      drawer: const GlobalNavigationDrawer(),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         physics: const BouncingScrollPhysics(),

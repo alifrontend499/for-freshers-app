@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// -- routes
+// -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
 // -- consts | screen

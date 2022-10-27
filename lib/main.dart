@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// -- routing
+// -- all routes consts
 import 'package:app/utilities/routing/routing.dart' as router;
 import 'package:app/utilities/routing/routing_consts.dart';
 

@@ -1,4 +1,3 @@
-import 'package:app/utilities/routing/routing_consts.dart';
 import 'package:flutter/material.dart';
 
 // -- styles | screen
@@ -7,23 +6,24 @@ import '../styles/auth_styles.dart';
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
+  String fieldFirstName = '';
+  String fieldLastName = '';
   String fieldEmail = '';
   String fieldPassword = '';
+  String fieldConfirmPassword = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: getLoginAppBar(context),
-
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: const [
                                   // child | head
                                   Text(
-                                    'Sign In',
+                                    'Sign Up',
                                     // style: stylesPageHeaderHeading,
                                     style: authStylesPageHeading,
                                     textAlign: TextAlign.left,
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   // child | desc
                                   Text(
-                                    'Login to your account now',
+                                    'Lets create a new account',
                                     // style: stylesPageHeaderDescription,
                                     style: authStylesPageDescription,
                                     textAlign: TextAlign.left,
@@ -80,26 +80,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    buildFirstNameField(),
+                                    const SizedBox(height: 20),
+
+                                    buildLastNameField(),
+                                    const SizedBox(height: 20),
+
                                     buildEmailField(),
                                     const SizedBox(height: 20),
+
                                     buildPasswordField(),
-                                    const SizedBox(height: 15),
-                                    InkWell(
-                                      onTap: () {},
-                                      highlightColor:
-                                          globalColorInkWellHighlight,
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 2,
-                                          horizontal: 8,
-                                        ),
-                                        child: Text(
-                                          'Forgot Password?',
-                                          style: authStylesLinkText,
-                                        ),
-                                      ),
-                                    ),
+                                    const SizedBox(height: 20),
+
+                                    buildConfirmPasswordField(),
                                   ],
                                 ),
                               ),
@@ -119,11 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ElevatedButton(
                       style: authStylesPageButton,
                       onPressed: () {},
-                      child: const Text('SIGN IN'),
+                      child: const Text('CREATE'),
                     ),
                     const SizedBox(height: 15),
                     InkWell(
-                      onTap: () => Navigator.pushNamed(context, signUpScreenRoute),
+                      onTap: () {},
                       highlightColor: globalColorInkWellHighlight,
                       borderRadius: BorderRadius.circular(5),
                       child: const Padding(
@@ -132,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           horizontal: 8,
                         ),
                         child: Text(
-                          'Create a new account',
+                          'Already have an account',
                           style: authStylesLinkText,
                         ),
                       ),
@@ -146,6 +139,48 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Widget buildLastNameField() => TextFormField(
+    style: authStylesInput,
+    decoration: InputDecoration(
+      hintText: "Last Name",
+      border: authStylesInputBorder,
+      focusedBorder: authStylesInputBorderFocused,
+      contentPadding:
+      const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+      // errorStyle: stylesInputError,
+    ),
+    onSaved: (value) => setState(() => fieldLastName = value!),
+    validator: (value) {
+      if (value!.isEmpty) {
+        // checking for empty value
+        return "The field can not be empty";
+      }
+      return null;
+    },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+  );
+
+  Widget buildFirstNameField() => TextFormField(
+    style: authStylesInput,
+    decoration: InputDecoration(
+      hintText: "First Name",
+      border: authStylesInputBorder,
+      focusedBorder: authStylesInputBorderFocused,
+      contentPadding:
+      const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+      // errorStyle: stylesInputError,
+    ),
+    onSaved: (value) => setState(() => fieldFirstName = value!),
+    validator: (value) {
+      if (value!.isEmpty) {
+        // checking for empty value
+        return "The field can not be empty";
+      }
+      return null;
+    },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+  );
 
   Widget buildEmailField() => TextFormField(
         keyboardType: TextInputType.emailAddress,
@@ -195,4 +230,25 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
       );
+
+  Widget buildConfirmPasswordField() => TextFormField(
+    style: authStylesInput,
+    decoration: InputDecoration(
+      hintText: "Confirm Password",
+      border: authStylesInputBorder,
+      focusedBorder: authStylesInputBorderFocused,
+      contentPadding:
+      const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+      // errorStyle: stylesInputError,
+    ),
+    onSaved: (value) => setState(() => fieldConfirmPassword = value!),
+    validator: (value) {
+      if (value!.isEmpty) {
+        // checking for empty value
+        return "The field can not be empty";
+      }
+      return null;
+    },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+  );
 }

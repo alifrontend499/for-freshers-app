@@ -6,6 +6,9 @@ import 'package:app/global/widget/navigation_drawer/styles/navigation_drawer_sty
 // -- global | colors
 import 'package:app/global/colors/global_colors.dart';
 
+// -- all routes consts
+import 'package:app/utilities/routing/routing_consts.dart';
+
 // Then close the drawer
 // Navigator.pop(context);
 
@@ -31,7 +34,7 @@ class GlobalNavigationDrawer extends StatelessWidget {
               right: defaultGap - 5,
             ),
             child: InkWell(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, loginScreenRoute),
               highlightColor: globalColorInkWellHighlight,
               borderRadius: BorderRadius.circular(10),
               child: Padding(
