@@ -8,6 +8,7 @@ import 'package:app/screens/intro/main_view.dart';
 import 'package:app/screens/home/main_view.dart';
 import 'package:app/screens/auth/login/main_view.dart';
 import 'package:app/screens/auth/signup/main_view.dart';
+import 'package:app/screens/auth/forgot_password/main_view.dart';
 
 Route<dynamic> generatedRoutes(RouteSettings settings) {
   switch(settings.name) {
@@ -21,6 +22,8 @@ Route<dynamic> generatedRoutes(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const LoginScreen());
     case signUpScreenRoute:
       return MaterialPageRoute(builder: (context) => const SignUpScreen());
+    case forgotPasswordScreenRoute:
+      return MaterialPageRoute(builder: (context) => const ForgotPasswordScreen());
 
     default:
       return MaterialPageRoute(builder: (context) => const IntroSliderScreen());

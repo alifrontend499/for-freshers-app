@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
+// -- consts | auth
+import 'package:app/screens/auth/auth_consts.dart';
+// -- consts | screen
+import 'package:app/screens/auth/signup/signup_consts.dart';
+
 // -- styles | screen
 import '../styles/auth_styles.dart';
 
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
+
+// -- all routes consts
+import 'package:app/utilities/routing/routing_consts.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -20,6 +28,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String fieldEmail = '';
   String fieldPassword = '';
   String fieldConfirmPassword = '';
+  bool submitBtnLoading = true;
+
+  void onSubmit() async {
+    final form = formKey.currentState;
+    if (form != null && form.validate()) {
+      form.save();
+
+      // closing the keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      // showing loading
+      setState(() => submitBtnLoading = true);
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      // hiding loading
+      setState(() => submitBtnLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 children: const [
                                   // child | head
                                   Text(
-                                    'Sign Up',
+                                    SCREEN_HEADING,
                                     // style: stylesPageHeaderHeading,
                                     style: authStylesPageHeading,
                                     textAlign: TextAlign.left,
@@ -65,7 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                                   // child | desc
                                   Text(
-                                    'Lets create a new account',
+                                    SCREEN_DESCRIPTION,
                                     // style: stylesPageHeaderDescription,
                                     style: authStylesPageDescription,
                                     textAlign: TextAlign.left,
@@ -110,13 +137,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      style: authStylesPageButton,
+                      style: authStylesPageButton(submitBtnLoading),
                       onPressed: () {},
-                      child: const Text('CREATE'),
+                      child: const Text(SCREEN_SUBMIT_BUTTON),
                     ),
                     const SizedBox(height: 15),
                     InkWell(
-                      onTap: () {},
+                      onTap: () => Navigator.pushNamed(context, loginScreenRoute),
                       highlightColor: globalColorInkWellHighlight,
                       borderRadius: BorderRadius.circular(5),
                       child: const Padding(
@@ -125,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           horizontal: 8,
                         ),
                         child: Text(
-                          'Already have an account',
+                          AUTH_ALREADY_HAVE_AN_ACCOUNT,
                           style: authStylesLinkText,
                         ),
                       ),
@@ -140,31 +167,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget buildLastNameField() => TextFormField(
-    style: authStylesInput,
-    decoration: InputDecoration(
-      hintText: "Last Name",
-      border: authStylesInputBorder,
-      focusedBorder: authStylesInputBorderFocused,
-      contentPadding:
-      const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
-      // errorStyle: stylesInputError,
-    ),
-    onSaved: (value) => setState(() => fieldLastName = value!),
-    validator: (value) {
-      if (value!.isEmpty) {
-        // checking for empty value
-        return "The field can not be empty";
-      }
-      return null;
-    },
-    autovalidateMode: AutovalidateMode.onUserInteraction,
-  );
-
   Widget buildFirstNameField() => TextFormField(
     style: authStylesInput,
     decoration: InputDecoration(
-      hintText: "First Name",
+      hintText: INPUT_HINT_FIRST_NAME,
       border: authStylesInputBorder,
       focusedBorder: authStylesInputBorderFocused,
       contentPadding:
@@ -175,18 +181,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     validator: (value) {
       if (value!.isEmpty) {
         // checking for empty value
-        return "The field can not be empty";
+        return VALIDATION_ERROR_EMPTY_FIELD;
       }
       return null;
     },
     autovalidateMode: AutovalidateMode.onUserInteraction,
   );
 
+  Widget buildLastNameField() => TextFormField(
+    style: authStylesInput,
+    decoration: InputDecoration(
+      hintText: INPUT_HINT_LAST_NAME,
+      border: authStylesInputBorder,
+      focusedBorder: authStylesInputBorderFocused,
+      contentPadding:
+      const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+      // errorStyle: stylesInputError,
+    ),
+    onSaved: (value) => setState(() => fieldLastName = value!),
+    validator: (value) {
+      if (value!.isEmpty) {
+        // checking for empty value
+        return VALIDATION_ERROR_EMPTY_FIELD;
+      }
+      return null;
+    },
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+  );
+
+
+
   Widget buildEmailField() => TextFormField(
         keyboardType: TextInputType.emailAddress,
         style: authStylesInput,
         decoration: InputDecoration(
-          hintText: "Enter Email",
+          hintText: INPUT_HINT_EMAIL,
           border: authStylesInputBorder,
           focusedBorder: authStylesInputBorderFocused,
           contentPadding:
@@ -200,10 +229,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
           if (value!.isEmpty) {
             // checking for empty value
-            return "The field can not be empty";
+            return VALIDATION_ERROR_EMPTY_FIELD;
           } else if (!regExpEmail.hasMatch(value)) {
             // checking for valid email
-            return "Email should be valid";
+            return VALIDATION_ERROR_VALID_EMAIL1;
           }
           return null;
         },
@@ -213,7 +242,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget buildPasswordField() => TextFormField(
         style: authStylesInput,
         decoration: InputDecoration(
-          hintText: "Enter Password",
+          hintText: INPUT_HINT_PASSWORD,
           border: authStylesInputBorder,
           focusedBorder: authStylesInputBorderFocused,
           contentPadding:
@@ -224,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         validator: (value) {
           if (value!.isEmpty) {
             // checking for empty value
-            return "The field can not be empty";
+            return VALIDATION_ERROR_EMPTY_FIELD;
           }
           return null;
         },
@@ -234,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget buildConfirmPasswordField() => TextFormField(
     style: authStylesInput,
     decoration: InputDecoration(
-      hintText: "Confirm Password",
+      hintText: INPUT_HINT_CONFIRM_PASSWORD,
       border: authStylesInputBorder,
       focusedBorder: authStylesInputBorderFocused,
       contentPadding:
@@ -245,7 +274,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     validator: (value) {
       if (value!.isEmpty) {
         // checking for empty value
-        return "The field can not be empty";
+        return VALIDATION_ERROR_EMPTY_FIELD;
       }
       return null;
     },

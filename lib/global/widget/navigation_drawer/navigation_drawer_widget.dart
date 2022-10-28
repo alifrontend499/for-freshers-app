@@ -34,7 +34,13 @@ class GlobalNavigationDrawer extends StatelessWidget {
               right: defaultGap - 5,
             ),
             child: InkWell(
-              onTap: () => Navigator.pushNamed(context, loginScreenRoute),
+              onTap: () {
+                // closing drawer
+                Navigator.pop(context);
+
+                // navigating
+                Navigator.pushNamed(context, loginScreenRoute);
+              },
               highlightColor: globalColorInkWellHighlight,
               borderRadius: BorderRadius.circular(10),
               child: Padding(

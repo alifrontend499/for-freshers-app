@@ -21,12 +21,12 @@ const TextStyle authStylesLinkText = TextStyle(
   color: globalColorAppPrimary,
 );
 
-final ButtonStyle authStylesPageButton = ElevatedButton.styleFrom(
+ButtonStyle authStylesPageButton(bool isLoading) => ElevatedButton.styleFrom(
   minimumSize: const Size(
     double.infinity,
     globalSettingsDefaultButtonHeight,
   ),
-  backgroundColor: globalColorAppPrimary,
+  backgroundColor: isLoading ? globalColorAppPrimary.withOpacity(0.5) : globalColorAppPrimary,
   splashFactory: NoSplash.splashFactory,
   textStyle: const TextStyle(
     fontSize: 15,
@@ -41,6 +41,7 @@ final ButtonStyle authStylesPageButton = ElevatedButton.styleFrom(
 final OutlineInputBorder authStylesInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(5),
   borderSide: const BorderSide(
+    color: globalColorAppPrimary,
     width: 2,
   ),
 );

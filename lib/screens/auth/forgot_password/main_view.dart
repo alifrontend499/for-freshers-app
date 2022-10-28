@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 // -- consts | auth
 import 'package:app/screens/auth/auth_consts.dart';
-
 // -- consts | screen
-import 'package:app/screens/auth/login/login_consts.dart';
+import 'package:app/screens/auth/forgot_password/forgot_password_consts.dart';
+
+// -- all routes consts
+import 'package:app/utilities/routing/routing_consts.dart';
 
 // -- styles | screen
 import '../styles/auth_styles.dart';
@@ -12,22 +14,18 @@ import '../styles/auth_styles.dart';
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
-// -- all routes consts
-import 'package:app/utilities/routing/routing_consts.dart';
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final formKey = GlobalKey<FormState>();
   String fieldEmail = '';
   String fieldPassword = '';
-  bool isPasswordVisible = true;
-  bool submitBtnLoading = false;
+  bool submitBtnLoading = true;
 
   void onSubmit() async {
     final form = formKey.currentState;
@@ -109,28 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     buildEmailField(),
-                                    const SizedBox(height: 20),
-                                    buildPasswordField(),
-                                    const SizedBox(height: 15),
-                                    InkWell(
-                                      onTap: () => !submitBtnLoading
-                                          ? Navigator.pushNamed(context,
-                                              forgotPasswordScreenRoute)
-                                          : false,
-                                      highlightColor:
-                                          globalColorInkWellHighlight,
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 2,
-                                          horizontal: 8,
-                                        ),
-                                        child: Text(
-                                          SCREEN_FORGOT_PASSWORD,
-                                          style: authStylesLinkText,
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -149,23 +125,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     ElevatedButton(
                       style: authStylesPageButton(submitBtnLoading),
-                      onPressed: () => !submitBtnLoading ? onSubmit() : false,
-                      child: submitBtnLoading
-                          ? const SizedBox(
-                              height: 17,
-                              width: 17,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text(SCREEN_SUBMIT_BUTTON),
+                      onPressed: () {},
+                      child: const Text(SCREEN_SUBMIT_BUTTON),
                     ),
                     const SizedBox(height: 15),
                     InkWell(
-                      onTap: () => !submitBtnLoading
-                          ? Navigator.pushNamed(context, signUpScreenRoute)
-                          : false,
+                      onTap: () => Navigator.pushNamed(context, loginScreenRoute),
                       highlightColor: globalColorInkWellHighlight,
                       borderRadius: BorderRadius.circular(5),
                       child: const Padding(
@@ -174,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           horizontal: 8,
                         ),
                         child: Text(
-                          AUTH_CREATE_NEW_ACCOUNT,
+                          AUTH_ALREADY_HAVE_AN_ACCOUNT,
                           style: authStylesLinkText,
                         ),
                       ),
@@ -211,28 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (!regExpEmail.hasMatch(value)) {
             // checking for valid email
             return VALIDATION_ERROR_VALID_EMAIL1;
-          }
-          return null;
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-      );
-
-  Widget buildPasswordField() => TextFormField(
-        style: authStylesInput,
-        obscureText: isPasswordVisible,
-        decoration: InputDecoration(
-          hintText: INPUT_HINT_PASSWORD,
-          border: authStylesInputBorder,
-          focusedBorder: authStylesInputBorderFocused,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
-          // errorStyle: stylesInputError,
-        ),
-        onSaved: (value) => setState(() => fieldPassword = value!),
-        validator: (value) {
-          if (value!.isEmpty) {
-            // checking for empty value
-            return VALIDATION_ERROR_EMPTY_FIELD;
           }
           return null;
         },

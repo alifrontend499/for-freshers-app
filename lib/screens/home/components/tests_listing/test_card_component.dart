@@ -1,4 +1,5 @@
 import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
+import 'package:app/screens/test_details/main_view.dart';
 import 'package:flutter/material.dart';
 
 // -- colors | global
@@ -94,8 +95,19 @@ class TestCard extends StatelessWidget {
       ),
       onTap: () {
         if (isPremium) {
+          // showing dialog
           showDialog(
-              context: context, builder: (context) => PremiumTestDialog());
+            context: context,
+            builder: (context) => const PremiumTestDialog(),
+          );
+        } else {
+          // moving to details screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TestDetailsScreen(testName: testName),
+            ),
+          );
         }
       },
     );
