@@ -22,6 +22,17 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
+  final String img1 = 'https://images.collegexpress.com/article/test-prep-timeline-high-school.jpg';
+  final String img2 = 'https://thumbs.dreamstime.com/b/high-school-university-student-hands-taking-exams-writing-examination-paper-answer-sheet-optical-form-standardized-test-136686809.jpg';
+  final String img3 = 'https://institute4learning.com/blog/wp-content/uploads/2013/02/testing.jpg';
+  final String img4 = 'https://www.sparkadmissions.com/wp-content/uploads/2019/10/02_What_You_Need_to_Know_About_the_SSAT-880x486.jpg';
+  final String img5 = 'https://fordhaminstitute.org/sites/default/files/styles/single_main_image/public/2019-01/test-scores-tell-us-something-about-school-quality-petrilli.jpg?itok=xyOyWNbF';
+  final String img6 = 'https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/tltkvpcrqcbwm2qm_1629961279.jpeg';
+  final String img7 = 'https://imageio.forbes.com/specials-images/imageserve/5fd928fe0cb59b9eb105c330/Test-with-broken-Pencil/960x0.jpg?format=jpg&width=960';
+  final String img8 = 'https://res.cloudinary.com/picked/image/upload/ar_16:9,c_crop/q_60,h_300,f_auto/v1597396333/cms/teaching-1597396332';
+  final String img9 = 'https://imageio.forbes.com/blogs-images/tomvanderark/files/2019/03/Forbes-Standardized-Testing.jpg?format=jpg&width=1200';
+  final String img10 = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN9tTJwVRuRlOWeagyNg_nOc5zes2WAL0ilZ8JszZJtkLHxy0bptscboMOxVWJpSuFSFM&usqp=CAU';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +60,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   // -- child | bottom sec
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       // -- child | test card
                       Expanded(
                         child: TestCard(
@@ -58,9 +69,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '15',
                           testDescription: '',
                           isPremium: true,
+                          testImg: img1,
                         ),
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 15),
 
                       // -- child | test card
                       Expanded(
@@ -70,6 +82,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '10 - 15',
                           testDescription: '',
                           isPremium: true,
+                          testImg: img2,
                         ),
                       ),
                     ],
@@ -91,7 +104,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   // -- child | bottom sec
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       // -- child | test card
                       Expanded(
                         child: TestCard(
@@ -100,9 +113,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '15',
                           testDescription: '',
                           isPremium: false,
+                          testImg: img3,
                         ),
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 15),
 
                       // -- child | test card
                       Expanded(
@@ -112,6 +126,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '10 - 15',
                           testDescription: '',
                           isPremium: false,
+                          testImg: img4,
                         ),
                       ),
                     ],
@@ -133,7 +148,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   // -- child | bottom sec
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       // -- child | test card
                       Expanded(
                         child: TestCard(
@@ -142,9 +157,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '15',
                           testDescription: '',
                           isPremium: false,
+                          testImg: img5,
                         ),
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 15),
 
                       // -- child | test card
                       Expanded(
@@ -154,6 +170,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '10 - 15',
                           testDescription: '',
                           isPremium: true,
+                          testImg: img6,
                         ),
                       ),
                     ],
@@ -175,7 +192,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   // -- child | bottom sec
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       // -- child | test card
                       Expanded(
                         child: TestCard(
@@ -184,6 +201,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           testQuestions: '20-25',
                           testDescription: '',
                           isPremium: false,
+                          testImg: img7,
                         ),
                       ),
                     ],

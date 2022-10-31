@@ -9,13 +9,13 @@ const TextStyle screenStylesAppBarTitle = TextStyle(
 );
 
 const TextStyle screenStylesTestListingHeading = TextStyle(
-  color: Colors.black,
+  color: globalColorAppPrimary,
   fontSize: 17,
   fontWeight: FontWeight.w600,
 );
 
 const TextStyle screenStylesTestListingViewAllLink = TextStyle(
-  color: globalColorAppPrimary,
+  color: Colors.black,
   fontSize: 13,
   fontWeight: FontWeight.w600,
 );
@@ -38,6 +38,6 @@ const TextStyle screenStylesTestCardDesc = TextStyle(
 );
 
 const TextStyle screenStylesTestCardQuestions = TextStyle(
-  color: Colors.grey,
+  color: Colors.black87,
   fontSize: 12,
 );

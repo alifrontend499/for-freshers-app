@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'For Freshers',
       onGenerateRoute: router.generatedRoutes,
-      initialRoute: introSliderScreenRoute,
+      initialRoute: homepageScreenRoute,
       theme: getGlobalThemeData(context),
     );
   }

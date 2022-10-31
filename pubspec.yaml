@@ -38,6 +38,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   google_fonts: ^3.0.1
   page_transition: ^2.0.9
+  cached_network_image: ^3.2.2
 
 dev_dependencies:
   flutter_test:

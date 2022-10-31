@@ -6,12 +6,12 @@ import 'package:app/global/settings/global_settings.dart';
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
-ButtonStyle submitBtnStyles(bool isLoading) => ElevatedButton.styleFrom(
+final ButtonStyle submitBtnStyles = ElevatedButton.styleFrom(
   minimumSize: const Size(
     double.infinity,
     globalSettingsDefaultButtonHeight,
   ),
-  backgroundColor: isLoading ? globalColorAppPrimary.withOpacity(0.5) : globalColorAppPrimary,
+  backgroundColor: globalColorAppPrimary,
   splashFactory: NoSplash.splashFactory,
   textStyle: const TextStyle(
       fontSize: 15,

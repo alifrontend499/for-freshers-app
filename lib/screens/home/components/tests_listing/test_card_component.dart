@@ -1,5 +1,6 @@
 import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
 import 'package:app/screens/test_details/main_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // -- colors | global
@@ -20,6 +21,7 @@ class TestCard extends StatelessWidget {
   final String testQuestions;
   final String testDescription;
   final bool isPremium;
+  final String testImg;
 
   const TestCard({
     Key? key,
@@ -28,6 +30,7 @@ class TestCard extends StatelessWidget {
     required this.testQuestions,
     required this.testDescription,
     required this.isPremium,
+    required this.testImg,
   }) : super(key: key);
 
   @override
@@ -40,7 +43,23 @@ class TestCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: screenColorCardBg,
+          // color: Colors.white,
+          image: DecorationImage(
+            image: NetworkImage(testImg),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.2), BlendMode.modulate)
+            // opacity: .6,
+          ),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withOpacity(0.1),
+          //     blurRadius: 5.0,
+          //     offset: const Offset(4, 4),
+          //   ),
+          // ],
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.2),
+          ),
         ),
         child: Stack(
           children: [
@@ -105,7 +124,12 @@ class TestCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TestDetailsScreen(testName: testName),
+              builder: (context) => TestDetailsScreen(
+                testId: '1',
+                testName: testName,
+                testImg: testImg,
+                testDescription: testDescription,
+              ),
             ),
           );
         }

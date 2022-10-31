@@ -47,6 +47,7 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
                 testQuestions: item.testQuestions,
                 testDescription: item.testDescription,
                 isPremium: item.isPremium,
+                testImg: item.testImg,
               ),
               const SizedBox(height: 15),
             ],

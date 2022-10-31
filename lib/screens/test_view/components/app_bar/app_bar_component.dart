@@ -6,7 +6,7 @@ import 'package:app/screens/home/styles/home_styles.dart';
 // -- settings | global
 import 'package:app/global/settings/global_settings.dart';
 
-PreferredSize getTestDetailsAppBar(BuildContext context, String testName) {
+PreferredSize getTestViewAppBar(BuildContext context, String testName) {
   PreferredSize appBar = PreferredSize(
     preferredSize: globalSettingsAppBarSize,
     child: AppBar(
