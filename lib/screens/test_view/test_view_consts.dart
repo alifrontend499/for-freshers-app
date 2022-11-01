@@ -1,1 +1,1 @@
-const String DUMMY = '';
+const String CANCEL_TEST = 'Cancel';
