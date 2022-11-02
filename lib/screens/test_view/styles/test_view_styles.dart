@@ -14,6 +14,7 @@ const TextStyle screenStylesAppBarTitle = TextStyle(
 ButtonStyle screenStylesCancelTestButton = ElevatedButton.styleFrom(
   backgroundColor: Colors.redAccent,
   splashFactory: NoSplash.splashFactory,
+  elevation: 0,
   textStyle: const TextStyle(
     fontSize: 15,
   ),

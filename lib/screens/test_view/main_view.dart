@@ -1,11 +1,16 @@
-import 'package:app/screens/test_view/screens/test_screen.dart';
 import 'package:flutter/material.dart';
+
+// -- screen | consts
+import 'package:app/screens/test_view/test_view_consts.dart';
 
 // -- screen | styles
 import 'package:app/screens/test_view/styles/test_view_styles.dart';
 
 // -- component | screen
 import 'package:app/screens/test_view/components/app_bar/app_bar_component.dart';
+
+// screens
+import 'package:app/screens/test_view/screens/test_screen.dart';
 
 class TestViewScreen extends StatefulWidget {
   final String testId;
@@ -32,18 +37,18 @@ class _TestViewScreenState extends State<TestViewScreen> {
     // TODO: implement initState
     super.initState();
 
-    pagesCount = 1;
+    pagesCount = 2;
     children.addAll([
       TestScreen(
         pageTitle: 'First Page',
         controller: controller,
-        currentPage: currentPage,
+        pagesPosition: 1,
         pagesCount: pagesCount,
       ),
       TestScreen(
         pageTitle: 'Second Page',
         controller: controller,
-        currentPage: currentPage,
+        pagesPosition: 2,
         pagesCount: pagesCount,
       ),
     ]);
@@ -61,7 +66,7 @@ class _TestViewScreenState extends State<TestViewScreen> {
             child: PageView(
               controller: controller,
               physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (index) => setState(() => currentPage = index + 1),
+              // onPageChanged: (index) => setState(() => currentPage = index + 1),
               children: children,
             ),
           ),
@@ -77,9 +82,11 @@ class _TestViewScreenState extends State<TestViewScreen> {
                     child: ElevatedButton(
                       style: screenStylesTestNavPrevButton,
                       onPressed: () {
-                        controller.jumpToPage(0);
+                        final int action = currentPage - 1;
+                        setState(() => currentPage = action);
+                        controller.jumpToPage(currentPage);
                       },
-                      child: const Text('Prev'),
+                      child: const Text(TEST_ACTION_PREV),
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -91,10 +98,13 @@ class _TestViewScreenState extends State<TestViewScreen> {
                     style: screenStylesTestNavNextButton,
                     onPressed: () {
                       if (currentPage < pagesCount) {
-                        controller.jumpToPage(currentPage + 1);
+                        final int action = currentPage + 1;
+                        setState(() => currentPage = action);
+                        print('currentPage $currentPage');
+                        controller.jumpToPage(currentPage);
                       }
                     },
-                    child: const Text('Next'),
+                    child: const Text(TEST_ACTION_NEXT),
                   ),
                 ),
               ],
