@@ -13,7 +13,7 @@ import 'package:app/screens/home/components/tests_listing/test_card_component.da
 
 class AllTestsScreen extends StatefulWidget {
   final String testType;
-  final List<TestModal> allTests;
+  final List<TestSingleModel> allTests;
 
   const AllTestsScreen({
     Key? key,
@@ -48,6 +48,7 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
                 testDescription: item.testDescription,
                 isPremium: item.isPremium,
                 testImg: item.testImg,
+                showDescription: true,
               ),
               const SizedBox(height: 15),
             ],

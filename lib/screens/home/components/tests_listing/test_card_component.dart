@@ -1,6 +1,5 @@
 import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
 import 'package:app/screens/test_details/main_view.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // -- colors | global
@@ -15,6 +14,9 @@ import 'package:app/screens/home/styles/home_styles.dart';
 // -- package | unicons
 import 'package:unicons/unicons.dart';
 
+// helpers
+import 'package:app/utilities/helpers/helpers.dart';
+
 class TestCard extends StatelessWidget {
   final String testType;
   final String testName;
@@ -22,8 +24,9 @@ class TestCard extends StatelessWidget {
   final String testDescription;
   final bool isPremium;
   final String testImg;
+  bool showDescription;
 
-  const TestCard({
+  TestCard({
     Key? key,
     required this.testType,
     required this.testName,
@@ -31,6 +34,7 @@ class TestCard extends StatelessWidget {
     required this.testDescription,
     required this.isPremium,
     required this.testImg,
+    this.showDescription = false
   }) : super(key: key);
 
   @override
@@ -69,7 +73,7 @@ class TestCard extends StatelessWidget {
               children: [
                 // child | head
                 Text(
-                  testType,
+                  getCapitalizeTextHelper(testType),
                   style: screenStylesTestCardDifficulty,
                 ),
                 const SizedBox(height: 35),
@@ -81,7 +85,7 @@ class TestCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 7),
 
-                if (testDescription != '') ...[
+                if (showDescription) ...[
                   Text(
                     testDescription,
                     style: screenStylesTestCardDesc,

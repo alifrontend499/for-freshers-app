@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// helpers
+import 'package:app/utilities/helpers/helpers.dart';
+
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
@@ -24,7 +27,7 @@ import 'package:page_transition/page_transition.dart';
 class TestListingHeader extends StatelessWidget {
   final int testsCount;
   final String testType;
-  final List<TestModal> allTests;
+  final List<TestSingleModel> allTests;
 
   const TestListingHeader({
     Key? key,
@@ -40,7 +43,7 @@ class TestListingHeader extends StatelessWidget {
       children: [
         // child | left head
         Text(
-          testType,
+          getCapitalizeTextHelper(testType),
           style: screenStylesTestListingHeading,
         ),
 

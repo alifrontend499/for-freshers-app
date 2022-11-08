@@ -1,5 +1,15 @@
 class TestModal {
-  final String testId;
+  final String type;
+  final List<TestSingleModel> allTests;
+
+  TestModal({
+    required this.type,
+    required this.allTests,
+  });
+}
+
+class TestSingleModel {
+  final int testId;
   final String testType;
   final String testName;
   final String testQuestions;
@@ -7,7 +17,7 @@ class TestModal {
   final bool isPremium;
   final String testImg;
 
-  TestModal({
+  TestSingleModel({
     required this.testId,
     required this.testType,
     required this.testName,
