@@ -12,6 +12,7 @@ class TestScreen extends StatefulWidget {
   final PageController controller;
   final int pagesCount;
   final int pagesPosition;
+  final Map<String, dynamic> answers;
 
   const TestScreen({
     Key? key,
@@ -19,6 +20,7 @@ class TestScreen extends StatefulWidget {
     required this.controller,
     required this.pagesPosition,
     required this.pagesCount,
+    required this.answers,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -47,7 +50,9 @@ class _TestScreenState extends State<TestScreen> {
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
+
+              // child | question
               Text(
                 'How many planets are there in our galaxy',
                 style: TextStyle(
@@ -58,62 +63,7 @@ class _TestScreenState extends State<TestScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 15),
 
-          // child | options
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [],
-          ),
-          SizedBox(height: 15),
-
-          InkWell(
-            onTap: () {},
-            highlightColor: globalColorInkWellHighlight,
-            borderRadius: BorderRadius.circular(5),
-            child: TestOption(
-              isActive: false,
-              optionDescription: 'this is the description',
-              optionText: '10 planets',
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          InkWell(
-            onTap: () {},
-            highlightColor: globalColorInkWellHighlight,
-            borderRadius: BorderRadius.circular(5),
-            child: TestOption(
-              isActive: false,
-              optionDescription: 'this is the description',
-              optionText: '12 planets',
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          InkWell(
-            onTap: () {},
-            highlightColor: globalColorInkWellHighlight,
-            borderRadius: BorderRadius.circular(5),
-            child: TestOption(
-              isActive: false,
-              optionDescription: 'this is the description',
-              optionText: '9 planets',
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          InkWell(
-            onTap: () {},
-            highlightColor: globalColorInkWellHighlight,
-            borderRadius: BorderRadius.circular(5),
-            child: TestOption(
-              isActive: false,
-              optionDescription: 'this is the description',
-              optionText: '8 planets',
-            ),
-          ),
-          const SizedBox(height: 20),
 
         ],
       ),
