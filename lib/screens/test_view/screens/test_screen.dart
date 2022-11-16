@@ -1,4 +1,5 @@
 import 'package:app/global/colors/global_colors.dart';
+import 'package:app/screens/test_view/models/question_and_options_model.dart';
 import 'package:flutter/material.dart';
 
 // -- screen | styles
@@ -12,7 +13,8 @@ class TestScreen extends StatefulWidget {
   final PageController controller;
   final int pagesCount;
   final int pagesPosition;
-  final Map<String, dynamic> answers;
+  final String questionName;
+  final List<OptionsModel> options;
 
   const TestScreen({
     Key? key,
@@ -20,7 +22,8 @@ class TestScreen extends StatefulWidget {
     required this.controller,
     required this.pagesPosition,
     required this.pagesCount,
-    required this.answers,
+    required this.questionName,
+    required this.options,
   }) : super(key: key);
 
   @override
@@ -28,7 +31,6 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -36,14 +38,14 @@ class _TestScreenState extends State<TestScreen> {
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.max,
         children: [
           // child | top part
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Questions ${widget.pagesPosition}/${widget.pagesCount}',
+                'Questions ${widget.pagesPosition + 1}/${widget.pagesCount}',
                 style: const TextStyle(
                   color: globalColorAppPrimary,
                   fontWeight: FontWeight.w600,
@@ -54,17 +56,21 @@ class _TestScreenState extends State<TestScreen> {
 
               // child | question
               Text(
-                'How many planets are there in our galaxy',
-                style: TextStyle(
+                widget.questionName,
+                style: const TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 17,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 50),
 
-
+          // child | options
+          TestOption(
+            optionsData: widget.options,
+          ),
         ],
       ),
     );

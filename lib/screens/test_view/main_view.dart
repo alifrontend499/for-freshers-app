@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app/screens/test_view/loading/content_loading_options.dart';
 import 'package:app/screens/test_view/loading/content_loading_question.dart';
+import 'package:app/screens/test_view/models/question_and_options_model.dart';
 import 'package:flutter/material.dart';
 
 // -- screen | consts
@@ -51,6 +52,47 @@ class _TestViewScreenState extends State<TestViewScreen> {
     getTestQuestions();
   }
 
+  // get questions list
+  List<QuestionModel> getQuestionsList(rawData) {
+    if (rawData.isEmpty) return [];
+
+    final List<QuestionModel> data = [];
+
+    for (final dataItem in rawData) {
+      // generating questions data
+      data.addAll([
+        QuestionModel(
+          id: dataItem['id'].toString(),
+          quizId: dataItem['quiz_id'],
+          name: dataItem['name'],
+          options: getOptionsList(dataItem['answers']),
+        ),
+      ]);
+    }
+
+    return data;
+  }
+
+  // get options list
+  List<OptionsModel> getOptionsList(rawData) {
+    if (rawData.isEmpty) return [];
+    final List<OptionsModel> optionsData = [];
+
+    for (final dataItem in rawData) {
+      optionsData.addAll([
+        OptionsModel(
+          id: dataItem['id'].toString(),
+          optionId: dataItem['question_id'],
+          name: dataItem['name'],
+          description: dataItem['description'],
+          isRight: false,
+        )
+      ]);
+    }
+
+    return optionsData;
+  }
+
   Future<void> getTestQuestions() async {
     // loading
     setState(() => contentLoading = true);
@@ -65,16 +107,18 @@ class _TestViewScreenState extends State<TestViewScreen> {
       final responseData = responseBodyData['data']['quiz'];
 
       if (responseStatusCode == 200) {
-        final questions = responseData['question'];
+        final questionsData = responseData['question'];
+        final List<QuestionModel> questions = getQuestionsList(questionsData);
         List<Widget> widgetList = [];
-
         setState(() {
           pagesCount = questions.length;
         });
 
-        int index = 1;
+        int index = 0;
         for (final item in questions) {
-          final currentAnswers = item['answers'][0];
+          final List<OptionsModel> currentAnswers = item.options;
+
+          print('item.options ${item.options}');
 
           widgetList.addAll(
             [
@@ -83,7 +127,8 @@ class _TestViewScreenState extends State<TestViewScreen> {
                 controller: controller,
                 pagesPosition: index,
                 pagesCount: pagesCount,
-                answers: currentAnswers,
+                questionName: item.name,
+                options: currentAnswers,
               ),
             ],
           );
@@ -91,6 +136,7 @@ class _TestViewScreenState extends State<TestViewScreen> {
         }
 
         setState(() {
+          currentPage = 0;
           children = widgetList;
         });
       } else {
@@ -140,44 +186,41 @@ class _TestViewScreenState extends State<TestViewScreen> {
                 ),
 
                 // child | bottom section
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      if (currentPage > 0) ...[
-                        // child | next button
-                        Expanded(
-                          child: ElevatedButton(
-                            style: screenStylesTestNavPrevButton,
-                            onPressed: () {
-                              final int action = currentPage - 1;
-                              setState(() => currentPage = action);
-                              controller.jumpToPage(currentPage);
-                            },
-                            child: const Text(TEST_ACTION_PREV),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                      ],
-
-                      // child | next button
-                      Expanded(
-                        child: ElevatedButton(
-                          style: screenStylesTestNavNextButton,
-                          onPressed: () {
-                            if (currentPage <= pagesCount) {
-                              final int action = currentPage + 1;
-                              setState(() => currentPage = action);
-                              print('currentPage $currentPage');
-                              controller.jumpToPage(currentPage);
-                            }
-                          },
-                          child: const Text(TEST_ACTION_NEXT),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(20),
+                //   child: Row(
+                //     children: [
+                //       if (currentPage > 0) ...[
+                //         // child | next button
+                //         Expanded(
+                //           child: ElevatedButton(
+                //             style: screenStylesTestNavPrevButton,
+                //             onPressed: () {
+                //               setState(() => currentPage = currentPage - 1);
+                //               controller.jumpToPage(currentPage);
+                //             },
+                //             child: const Text(TEST_ACTION_PREV),
+                //           ),
+                //         ),
+                //         const SizedBox(width: 20),
+                //       ],
+                //
+                //       // child | next button
+                //       Expanded(
+                //         child: ElevatedButton(
+                //           style: screenStylesTestNavNextButton,
+                //           onPressed: () {
+                //             if (currentPage <= pagesCount) {
+                //               setState(() => currentPage = currentPage + 1);
+                //               controller.jumpToPage(currentPage);
+                //             }
+                //           },
+                //           child: const Text(TEST_ACTION_NEXT),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
     );
