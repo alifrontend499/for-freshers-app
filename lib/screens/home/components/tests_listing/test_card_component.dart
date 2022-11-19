@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
-// -- colors | screen
-import 'package:app/screens/home/styles/home_colors.dart';
-
 // -- styles | screen
 import 'package:app/screens/home/styles/home_styles.dart';
 
@@ -49,7 +46,8 @@ class TestCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           // color: Colors.white,
           image: DecorationImage(
-            image: NetworkImage(testImg),
+            // image: NetworkImage(testImg),
+              image: const NetworkImage('https://cdn.pixabay.com/photo/2014/06/03/19/38/board-361516__340.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.2), BlendMode.modulate)
             // opacity: .6,

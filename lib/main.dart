@@ -7,10 +7,14 @@ import 'package:app/utilities/routing/routing_consts.dart';
 // -- theme | global
 import 'package:app/global/theme/globalThemeData.dart';
 
-void main() {
+// package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+void main() {
   // running the main app
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

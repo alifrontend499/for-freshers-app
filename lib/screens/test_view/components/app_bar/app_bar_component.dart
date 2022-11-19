@@ -9,7 +9,14 @@ import 'package:app/screens/test_view/styles/test_view_styles.dart';
 // -- settings | global
 import 'package:app/global/settings/global_settings.dart';
 
-PreferredSize getTestViewAppBar(BuildContext context, String testName) {
+// package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// -- screen | dialog
+import 'package:app/screens/test_view/dialog/cancel_test_dialog.dart';
+
+PreferredSize getTestViewAppBar(
+    BuildContext context, String testName, WidgetRef parentRef) {
   PreferredSize appBar = PreferredSize(
     preferredSize: globalSettingsAppBarSize,
     child: AppBar(
@@ -29,7 +36,10 @@ PreferredSize getTestViewAppBar(BuildContext context, String testName) {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => CancelTestDialog(parentRef: parentRef),
+            ),
             style: screenStylesCancelTestButton,
             child: const Text(CANCEL_TEST),
           ),

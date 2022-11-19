@@ -13,6 +13,7 @@ class TestScreen extends StatefulWidget {
   final PageController controller;
   final int pagesCount;
   final int pagesPosition;
+  final QuestionModel questionData;
   final String questionName;
   final List<OptionsModel> options;
 
@@ -22,6 +23,7 @@ class TestScreen extends StatefulWidget {
     required this.controller,
     required this.pagesPosition,
     required this.pagesCount,
+    required this.questionData,
     required this.questionName,
     required this.options,
   }) : super(key: key);
@@ -69,6 +71,7 @@ class _TestScreenState extends State<TestScreen> {
 
           // child | options
           TestOption(
+            questionData: widget.questionData,
             optionsData: widget.options,
           ),
         ],

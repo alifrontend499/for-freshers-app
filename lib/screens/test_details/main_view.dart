@@ -40,9 +40,6 @@ class TestDetailsScreen extends StatefulWidget {
 }
 
 class _TestDetailsScreenState extends State<TestDetailsScreen> {
-  String dummyData =
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +62,8 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: Image.network(
-                        widget.testImg,
+                        // widget.testImg,
+                        'https://cdn.pixabay.com/photo/2014/06/03/19/38/board-361516__340.jpg',
                         fit: BoxFit.fill,
                         height: 250,
                       ),
@@ -77,7 +75,7 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      dummyData,
+                      widget.testDescription,
                       style: stylesTestDescription,
                     ),
                   ],

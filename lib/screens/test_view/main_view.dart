@@ -1,9 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
+// screen | loading
 import 'package:app/screens/test_view/loading/content_loading_options.dart';
 import 'package:app/screens/test_view/loading/content_loading_question.dart';
+
+// -- screen | model
 import 'package:app/screens/test_view/models/question_and_options_model.dart';
-import 'package:flutter/material.dart';
+
+// -- global | model
+import 'package:app/global/state/models/selected_answers_model.dart';
 
 // -- screen | consts
 import 'package:app/screens/test_view/test_view_consts.dart';
@@ -23,7 +29,16 @@ import 'package:http/http.dart' as http;
 // -- utils | apis
 import 'package:app/utilities/apis/all_apis.dart';
 
-class TestViewScreen extends StatefulWidget {
+// package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// global | state
+import 'package:app/global/state/global_state.dart';
+
+// -- screen | dialog
+import 'package:app/screens/test_view/dialog/cancel_test_dialog.dart';
+
+class TestViewScreen extends ConsumerStatefulWidget {
   final String testId;
   final String testName;
 
@@ -34,10 +49,10 @@ class TestViewScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TestViewScreen> createState() => _TestViewScreenState();
+  ConsumerState<TestViewScreen> createState() => _TestViewScreenState();
 }
 
-class _TestViewScreenState extends State<TestViewScreen> {
+class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   late PageController controller = PageController(initialPage: 0);
   late List<Widget> children = [];
   late int pagesCount = 0;
@@ -49,7 +64,19 @@ class _TestViewScreenState extends State<TestViewScreen> {
     // TODO: implement initState
     super.initState();
 
+    // getting questions
     getTestQuestions();
+
+    // initial checks
+    initialStateSetup();
+  }
+
+  Future<void> initialStateSetup() async {
+    // setting default for | setting global button enable/disable
+    ref.read(isAnswerSelectedProvider.notifier).state = false;
+
+    // setting default for | if the question is completed or not
+    ref.read(isQuestionCompletedProvider.notifier).state = false;
   }
 
   // get questions list
@@ -85,7 +112,7 @@ class _TestViewScreenState extends State<TestViewScreen> {
           optionId: dataItem['question_id'],
           name: dataItem['name'],
           description: dataItem['description'],
-          isRight: false,
+          isRight: dataItem['is_right'] == null ? false : true,
         )
       ]);
     }
@@ -118,8 +145,6 @@ class _TestViewScreenState extends State<TestViewScreen> {
         for (final item in questions) {
           final List<OptionsModel> currentAnswers = item.options;
 
-          print('item.options ${item.options}');
-
           widgetList.addAll(
             [
               TestScreen(
@@ -127,6 +152,7 @@ class _TestViewScreenState extends State<TestViewScreen> {
                 controller: controller,
                 pagesPosition: index,
                 pagesCount: pagesCount,
+                questionData: item,
                 questionName: item.name,
                 options: currentAnswers,
               ),
@@ -150,79 +176,106 @@ class _TestViewScreenState extends State<TestViewScreen> {
     setState(() => contentLoading = false);
   }
 
+  Future<bool> onWillPop() async {
+    showDialog(
+      context: context,
+      builder: (context) => CancelTestDialog(parentRef: ref),
+    );
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('ref.runtimeType ${ref.runtimeType}');
+    final isAnswerSelected = ref.watch(isAnswerSelectedProvider);
+
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: getTestViewAppBar(context, widget.testName),
-      body: contentLoading
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // loading | question
-                const TestViewQuestionContentLoading(),
+      appBar: getTestViewAppBar(context, widget.testName, ref),
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: contentLoading
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // loading | question
+                  const TestViewQuestionContentLoading(),
 
-                // loading | options
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return const TestViewContentLoading();
-                    },
+                  // loading | options
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return const TestViewContentLoading();
+                      },
+                    ),
                   ),
-                ),
-              ],
-            )
-          : Column(
-              children: [
-                // child | page view
-                Expanded(
-                  child: PageView(
-                    controller: controller,
-                    // physics: const NeverScrollableScrollPhysics(),
-                    onPageChanged: (index) => setState(() => currentPage = index + 1),
-                    children: children,
+                ],
+              )
+            : Column(
+                children: [
+                  // child | page view
+                  Expanded(
+                    child: PageView(
+                      controller: controller,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: children,
+                    ),
                   ),
-                ),
 
-                // child | bottom section
-                // Padding(
-                //   padding: const EdgeInsets.all(20),
-                //   child: Row(
-                //     children: [
-                //       if (currentPage > 0) ...[
-                //         // child | next button
-                //         Expanded(
-                //           child: ElevatedButton(
-                //             style: screenStylesTestNavPrevButton,
-                //             onPressed: () {
-                //               setState(() => currentPage = currentPage - 1);
-                //               controller.jumpToPage(currentPage);
-                //             },
-                //             child: const Text(TEST_ACTION_PREV),
-                //           ),
-                //         ),
-                //         const SizedBox(width: 20),
-                //       ],
-                //
-                //       // child | next button
-                //       Expanded(
-                //         child: ElevatedButton(
-                //           style: screenStylesTestNavNextButton,
-                //           onPressed: () {
-                //             if (currentPage <= pagesCount) {
-                //               setState(() => currentPage = currentPage + 1);
-                //               controller.jumpToPage(currentPage);
-                //             }
-                //           },
-                //           child: const Text(TEST_ACTION_NEXT),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-              ],
-            ),
+                  // child | bottom section
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        // if (currentPage > 0) ...[
+                        //   // child | next button
+                        //   Expanded(
+                        //     child: ElevatedButton(
+                        //       style: screenStylesTestNavPrevButton,
+                        //       onPressed: () {
+                        //         setState(() => currentPage = currentPage - 1);
+                        //         controller.jumpToPage(currentPage);
+                        //       },
+                        //       child: const Text(TEST_ACTION_PREV),
+                        //     ),
+                        //   ),
+                        //   const SizedBox(width: 20),
+                        // ],
+
+                        // child | next button
+                        Expanded(
+                          child: ElevatedButton(
+                              style: screenStylesTestNavNextButton(
+                                  isAnswerSelected),
+                              onPressed: () {
+                                if (isAnswerSelected) {
+                                  if (currentPage < (pagesCount - 1)) {
+                                    // setting current page
+                                    setState(
+                                      () => currentPage = currentPage + 1,
+                                    );
+
+                                    // changing page
+                                    controller.jumpToPage(currentPage);
+
+                                    // setting global button enable/disable
+                                    ref
+                                        .read(isAnswerSelectedProvider.notifier)
+                                        .state = false;
+                                  }
+                                }
+                              },
+                              child: currentPage == (pagesCount - 1)
+                                  ? const Text(TEST_ACTION_SUBMIT)
+                                  : const Text(TEST_ACTION_NEXT)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
