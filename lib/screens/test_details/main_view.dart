@@ -105,8 +105,7 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                   ),
                   const SizedBox(height: 15),
                   InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, homepageScreenRoute),
+                    onTap: () => Navigator.pushNamed(context, homepageScreenRoute),
                     highlightColor: globalColorInkWellHighlight,
                     borderRadius: BorderRadius.circular(5),
                     child: const Padding(

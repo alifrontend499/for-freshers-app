@@ -23,3 +23,12 @@ void updateSelectedAnswersProvider(WidgetRef ref, SelectedAnswerModel newItem) {
   // done
   print('state updated');
 }
+
+// to delete selected answers
+void deleteSelectedAnswersProvider(WidgetRef ref) {
+  // updating state
+  ref.watch(selectedAnswersProvider.notifier).state = [];
+
+  // done
+  print('state updated');
+}

@@ -51,3 +51,16 @@ ButtonStyle screenStylesTestNavNextButton(bool isEnabled) =>
         borderRadius: BorderRadius.circular(5),
       ),
     );
+
+// test result styles
+const TextStyle screenStylesTestResultHead = TextStyle(
+  fontWeight: FontWeight.w600,
+  fontSize: 21,
+  color: globalColorAppPrimary,
+);
+
+TextStyle screenStylesCircularPercentageInsideText(double fontSize, FontWeight fontWeight) => TextStyle(
+  fontWeight: fontWeight,
+  color: Colors.black,
+  fontSize: fontSize,
+);

@@ -8,3 +8,6 @@ import 'package:app/global/state/models/selected_answers_model.dart';
 final selectedAnswersProvider = StateProvider<List<SelectedAnswerModel>>((ref) => []);
 final isAnswerSelectedProvider = StateProvider<bool>((ref) => false);
 final isQuestionCompletedProvider = StateProvider<bool>((ref) => false);
+
+// routes
+final activeRouteNameProvider = StateProvider<String?>((ref) => '');

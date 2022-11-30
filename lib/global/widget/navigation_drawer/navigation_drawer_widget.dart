@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+// screen | consts
+import 'package:app/global/widget/navigation_drawer/navigation_drawer_consts.dart';
+
+// helpers
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
+
 // -- drawer | styles
 import 'package:app/global/widget/navigation_drawer/styles/navigation_drawer_styles.dart';
 
@@ -9,15 +15,34 @@ import 'package:app/global/colors/global_colors.dart';
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
-// Then close the drawer
-// Navigator.pop(context);
-
 final globalScaffoldKey = GlobalKey<ScaffoldState>();
 const double defaultGap = 15.0;
 const double nbLinkBottomGap = 8.0;
 
-class GlobalNavigationDrawer extends StatelessWidget {
+class GlobalNavigationDrawer extends StatefulWidget {
   const GlobalNavigationDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<GlobalNavigationDrawer> createState() => _GlobalNavigationDrawerState();
+}
+
+class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
+  bool isUserLoggedIn = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // checking user
+    checkIsUserLoggedIn();
+  }
+
+  // Function
+  void checkIsUserLoggedIn() async {
+    bool isLoggedIn =  await isUserLoggedInHelper();
+    print('isLoggedIn $isLoggedIn');
+    // setting value
+    setState(() => isUserLoggedIn = isLoggedIn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,66 +51,7 @@ class GlobalNavigationDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // child | top bar
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 45,
-              bottom: 8,
-              left: defaultGap - 5,
-              right: defaultGap - 5,
-            ),
-            child: InkWell(
-              onTap: () {
-                // closing drawer
-                Navigator.pop(context);
-
-                // navigating
-                Navigator.pushNamed(context, loginScreenRoute);
-              },
-              highlightColor: globalColorInkWellHighlight,
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // child | user image/icon
-                    Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                        color: globalColorAppPrimary,
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-
-                    // child | user details
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Sign In',
-                          style: ndStylesTopBarHead,
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          'View your account',
-                          style: ndStylesTopBarDesc,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+          getTopBar(),
 
           // SizedBox(height: 2),
           // Divider(
@@ -170,6 +136,7 @@ class GlobalNavigationDrawer extends StatelessWidget {
     );
   }
 
+  // navigation link
   Widget navigationLink(
     IconData linkIcon,
     String linkText, {
@@ -212,6 +179,73 @@ class GlobalNavigationDrawer extends StatelessWidget {
               style: ndStylesLinkText(isActive: isActive),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget getTopBar() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 45,
+        bottom: 8,
+        left: defaultGap - 5,
+        right: defaultGap - 5,
+      ),
+      child: InkWell(
+        onTap: () {
+          // closing drawer
+          Navigator.pop(context);
+
+          if(isUserLoggedIn) { // if user logged in
+
+          } else {
+            // navigating
+            Navigator.pushNamed(context, loginScreenRoute);
+          }
+        },
+        highlightColor: globalColorInkWellHighlight,
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // child | user image/icon
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: globalColorAppPrimary,
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+              const SizedBox(width: 15),
+
+              // child | user details
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    SCREEN_SIGN_IN,
+                    style: ndStylesTopBarHead,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    SCREEN_VIEW_ACCOUNT,
+                    style: ndStylesTopBarDesc,
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

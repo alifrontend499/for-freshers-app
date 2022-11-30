@@ -1,10 +1,19 @@
+import 'dart:convert';
+
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
+
+// -- consts | global
+import 'package:app/global/consts/global_consts.dart';
 
 // -- consts | auth
 import 'package:app/screens/auth/auth_consts.dart';
 
 // -- consts | screen
 import 'package:app/screens/auth/login/login_consts.dart';
+
+// -- modal
+import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
 // -- styles | screen
 import '../styles/auth_styles.dart';
@@ -15,12 +24,23 @@ import 'package:app/global/colors/global_colors.dart';
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
+// http
+import 'package:http/http.dart' as http;
+
+// apis
+import 'package:app/utilities/apis/all_apis.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
+
+const SnackBar snackBarErrorMessage = SnackBar(
+  content: Text(GLOBAL_UNKNOWN_ERROR_OCCURRED),
+  backgroundColor: Colors.redAccent,
+);
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
@@ -37,12 +57,55 @@ class _LoginScreenState extends State<LoginScreen> {
       // closing the keyboard
       FocusManager.instance.primaryFocus?.unfocus();
 
-      // showing loading
+      // loading
       setState(() => submitBtnLoading = true);
 
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        final response = await http.post(
+          Uri.parse(apiLogin),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, String>{
+              'userEmail': fieldEmail,
+              'password': fieldPassword
+            },
+          ),
+        );
+        final responseStatusCode = response.statusCode;
+        final responseBody = response.body;
+        final AuthUserModel dummy_user = AuthUserModel(
+          userName: 'aman singh',
+          userProfileImg:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgSmojUgwjIB87c4Q0hLCAyl__oiTySWGWJUZtUNHlHjBALLzTsu_vMHYMaEwLts4QEoo&usqp=CAU',
+          userFirstName: 'aman',
+          userLastName: 'singh',
+        );
 
-      // hiding loading
+        // setting dummy user
+        setUserDetailsHelper(dummy_user);
+
+        // going to home screen
+        if (mounted) {
+          Navigator.pushNamed(context, homepageScreenRoute);
+        }
+
+        if (responseStatusCode == 200) {
+        } else {
+          if (mounted) {
+            // showing error
+            ScaffoldMessenger.of(context).showSnackBar(snackBarErrorMessage);
+          }
+        }
+
+        print('responseStatusCode ${responseStatusCode}');
+        print('responseBody ${responseBody}');
+      } catch (err) {
+        print('Error Occurred: $err');
+      }
+
+      // loading
       setState(() => submitBtnLoading = false);
     }
   }

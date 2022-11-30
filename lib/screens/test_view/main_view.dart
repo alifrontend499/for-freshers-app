@@ -38,6 +38,9 @@ import 'package:app/global/state/global_state.dart';
 // -- screen | dialog
 import 'package:app/screens/test_view/dialog/cancel_test_dialog.dart';
 
+// -- screen | screens
+import 'package:app/screens/test_view/pages/test_result/test_result_view.dart';
+
 class TestViewScreen extends ConsumerStatefulWidget {
   final String testId;
   final String testName;
@@ -72,6 +75,9 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   }
 
   Future<void> initialStateSetup() async {
+    final dataNew = ref.watch(selectedAnswersProvider);
+    print('dataNew ${dataNew}');
+
     // setting default for | setting global button enable/disable
     ref.read(isAnswerSelectedProvider.notifier).state = false;
 
@@ -186,12 +192,11 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('ref.runtimeType ${ref.runtimeType}');
     final isAnswerSelected = ref.watch(isAnswerSelectedProvider);
 
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: getTestViewAppBar(context, widget.testName, ref),
+      appBar: getTestViewAppBar(context, widget.testName, ref, contentLoading),
       body: WillPopScope(
         onWillPop: onWillPop,
         child: contentLoading
@@ -263,6 +268,13 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                                     ref
                                         .read(isAnswerSelectedProvider.notifier)
                                         .state = false;
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const TestResultView(),
+                                      ),
+                                    );
                                   }
                                 }
                               },

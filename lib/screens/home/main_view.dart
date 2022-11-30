@@ -69,7 +69,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 testName: singleTestItem['name'],
                 testQuestions: singleTestItem['total_questions'].toString(),
                 testDescription: singleTestItem['text'],
-                isPremium: false,
+                isPremium: singleTestItem['is_premium'] == 'true' ? true : false,
                 testImg: '',
               ),
             );
@@ -103,6 +103,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
     setState(() => contentLoading = false);
   }
 
+  Future<bool> onWillPop() async {
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,82 +114,85 @@ class _HomepageScreenState extends State<HomepageScreen> {
       backgroundColor: Colors.white,
       appBar: getHomeAppBar(context),
       drawer: const GlobalNavigationDrawer(),
-      body: FutureBuilder(
-        future: allTests,
-        builder: ((context, AsyncSnapshot<List<TestModal>> snapshot) {
-          if (snapshot.hasData) {
-            final List<TestModal> data = snapshot.data!;
-            return RefreshIndicator(
-              onRefresh: onRefresh,
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 15, horizontal: 20),
-                itemCount: data.length,
-                itemBuilder: ((context, index) {
-                  final TestModal item = data[index];
-                  final List<TestSingleModel> twoTestItems =
-                  item.allTests.take(2).toList();
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: FutureBuilder(
+          future: allTests,
+          builder: ((context, AsyncSnapshot<List<TestModal>> snapshot) {
+            if (snapshot.hasData) {
+              final List<TestModal> data = snapshot.data!;
+              return RefreshIndicator(
+                onRefresh: onRefresh,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15, horizontal: 20),
+                  itemCount: data.length,
+                  itemBuilder: ((context, index) {
+                    final TestModal item = data[index];
+                    final List<TestSingleModel> twoTestItems =
+                    item.allTests.take(2).toList();
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // -- child | header
-                      TestListingHeader(
-                        testType: item.type,
-                        testsCount: item.allTests.length,
-                        allTests: item.allTests,
-                      ),
-                      const SizedBox(height: 15),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // -- child | header
+                        TestListingHeader(
+                          testType: item.type,
+                          testsCount: item.allTests.length,
+                          allTests: item.allTests,
+                        ),
+                        const SizedBox(height: 15),
 
-                      // -- child | content
-                      ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: twoTestItems.length,
-                        itemBuilder: ((context, index) {
-                          final TestSingleModel testItem =
-                          twoTestItems[index];
+                        // -- child | content
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: twoTestItems.length,
+                          itemBuilder: ((context, index) {
+                            final TestSingleModel testItem =
+                            twoTestItems[index];
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              TestCard(
-                                testName: testItem.testName,
-                                testType: testItem.testType,
-                                testQuestions: testItem.testQuestions,
-                                testDescription: testItem.testDescription,
-                                isPremium: testItem.isPremium,
-                                testImg: testItem.testImg,
-                              ),
-                              if (index < 1) ...[
-                                const SizedBox(height: 15),
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                TestCard(
+                                  testName: testItem.testName,
+                                  testType: testItem.testType,
+                                  testQuestions: testItem.testQuestions,
+                                  testDescription: testItem.testDescription,
+                                  isPremium: testItem.isPremium,
+                                  testImg: testItem.testImg,
+                                ),
+                                if (index < 1) ...[
+                                  const SizedBox(height: 15),
+                                ],
                               ],
-                            ],
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                }),
-              ),
-            );
-          } else {
-            if (contentLoading) {
-              return ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const HomeContentLoading();
-                },
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  }),
+                ),
+              );
+            } else {
+              if (contentLoading) {
+                return ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return const HomeContentLoading();
+                  },
+                );
+              }
+              return const Text(
+                'no data found',
+                textAlign: TextAlign.center,
               );
             }
-            return const Text(
-              'no data found',
-              textAlign: TextAlign.center,
-            );
-          }
-        }),
+          }),
+        ),
       ),
     );
   }

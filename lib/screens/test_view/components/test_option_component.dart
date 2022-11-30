@@ -93,6 +93,7 @@ class _TestOptionState extends ConsumerState<TestOption> {
             // child | option
             InkWell(
               onTap: () {
+                print('object');
                 final isAnswerSelected = ref.watch(isAnswerSelectedProvider);
                 if (isAnswerSelected == false) {
                   checkAnswer(dataItem.id);

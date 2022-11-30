@@ -12,6 +12,10 @@ import 'package:app/screens/test_view/test_view_consts.dart';
 // package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// global | state
+import 'package:app/global/state/global_state.dart';
+import 'package:app/global/state/helpers/global_state_helper.dart';
+
 class CancelTestDialog extends StatelessWidget {
   final WidgetRef parentRef;
 
@@ -57,7 +61,16 @@ class CancelTestDialog extends StatelessWidget {
 
         // child | button
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            // deleting selected answer state
+            deleteSelectedAnswersProvider(parentRef);
+
+            // setting default for | setting global button enable/disable
+            parentRef.read(isAnswerSelectedProvider.notifier).state = false;
+
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             elevation: 0,
             minimumSize: const Size(
