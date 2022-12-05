@@ -1,3 +1,4 @@
+import 'package:app/utilities/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 
 // screen | consts
@@ -15,6 +16,8 @@ import 'package:app/global/colors/global_colors.dart';
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
+import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
+
 final globalScaffoldKey = GlobalKey<ScaffoldState>();
 const double defaultGap = 15.0;
 const double nbLinkBottomGap = 8.0;
@@ -28,20 +31,25 @@ class GlobalNavigationDrawer extends StatefulWidget {
 
 class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
   bool isUserLoggedIn = false;
+  late AuthUserModel userDetails;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // checking user
-    checkIsUserLoggedIn();
+    getUserDetails();
   }
 
   // Function
-  void checkIsUserLoggedIn() async {
-    bool isLoggedIn =  await isUserLoggedInHelper();
-    print('isLoggedIn $isLoggedIn');
+  void getUserDetails() async {
+    bool isLoggedIn = await isUserLoggedInHelper();
+    AuthUserModel userDetailsRaw = await getUserDetailsHelper();
     // setting value
-    setState(() => isUserLoggedIn = isLoggedIn);
+    setState(() {
+      isUserLoggedIn = isLoggedIn;
+      userDetails = userDetailsRaw;
+    });
   }
 
   @override
@@ -111,26 +119,13 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
                       ],
                     ),
                   ),
-
-                  // divider
-                  const Divider(),
-                  const SizedBox(height: 3),
-
-                  // child | links bottom view
-                  // Column(
-                  //   children: [
-                  //     // child | link
-                  //     navigationLink(
-                  //       Icons.logout_outlined,
-                  //       'Logout',
-                  //     ),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 10),
                 ],
               ),
             ),
           ),
+
+          navigationLinkLogout(),
+          const SizedBox(height: 5),
         ],
       ),
     );
@@ -184,6 +179,50 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
     );
   }
 
+  // navigation link | logout
+  Widget navigationLinkLogout() {
+    return InkWell(
+      onTap: () {},
+      highlightColor: globalColorInkWellHighlight,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          bottom: 12,
+          top: 12,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // child | icon
+            Container(
+              width: 35,
+              // color: Colors.red,
+              alignment: Alignment.centerLeft,
+              child: const Icon(
+                Icons.logout_outlined,
+                size: 22,
+                color: Colors.black,
+              ),
+            ),
+
+            // child | text
+            Text(
+              'Logout',
+              style: ndStylesLinkText(isActive: false),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // top bar
   Widget getTopBar() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -197,7 +236,8 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
           // closing drawer
           Navigator.pop(context);
 
-          if(isUserLoggedIn) { // if user logged in
+          if (isUserLoggedIn) {
+            // if user logged in
 
           } else {
             // navigating
@@ -219,26 +259,30 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
                   color: globalColorAppPrimary,
                   borderRadius: BorderRadius.circular(40),
                 ),
-                child: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 30,
-                ),
+                child: isUserLoggedIn
+                    ? Image.network(userDetails.userProfileImg)
+                    : const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 30,
+                      ),
               ),
               const SizedBox(width: 15),
 
               // child | user details
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    SCREEN_SIGN_IN,
+                    isUserLoggedIn
+                        ? "${getCapitalizeTextHelper(userDetails.userFirstName)} ${getCapitalizeTextHelper(userDetails.userLastName)}"
+                        : SCREEN_SIGN_IN,
                     style: ndStylesTopBarHead,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
-                  Text(
+                  const Text(
                     SCREEN_VIEW_ACCOUNT,
                     style: ndStylesTopBarDesc,
                   ),

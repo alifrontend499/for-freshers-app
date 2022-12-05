@@ -10,4 +10,11 @@ class AuthUserModel {
     required this.userFirstName,
     required this.userLastName,
   });
+
+  Map<String, dynamic> toJson() => {
+    'userName': userName,
+    'userProfileImg': userProfileImg,
+    'userFirstName': userFirstName,
+    'userLastName': userLastName,
+  };
 }

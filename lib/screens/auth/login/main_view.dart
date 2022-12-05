@@ -1,16 +1,15 @@
 import 'dart:convert';
 
-import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
-
-// -- consts | global
-import 'package:app/global/consts/global_consts.dart';
 
 // -- consts | auth
 import 'package:app/screens/auth/auth_consts.dart';
 
 // -- consts | screen
 import 'package:app/screens/auth/login/login_consts.dart';
+
+// -- helpers | shared preference
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 
 // -- modal
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
@@ -30,6 +29,15 @@ import 'package:http/http.dart' as http;
 // apis
 import 'package:app/utilities/apis/all_apis.dart';
 
+const SnackBar snackBarErrorMessage = SnackBar(
+  content: Text(AUTH_RESPONSE_USER_NOT_FOUND),
+  backgroundColor: Colors.redAccent,
+);
+const SnackBar snackBarSuccessMessage = SnackBar(
+  content: Text(AUTH_RESPONSE_LOGIN_SUCCESS),
+  backgroundColor: Colors.greenAccent,
+);
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -37,25 +45,22 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-const SnackBar snackBarErrorMessage = SnackBar(
-  content: Text(GLOBAL_UNKNOWN_ERROR_OCCURRED),
-  backgroundColor: Colors.redAccent,
-);
-
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  String fieldEmail = '';
-  String fieldPassword = '';
+  String fieldEmail = 'aman@gmail.com';
+  String fieldPassword = '123456';
   bool isPasswordVisible = true;
   bool submitBtnLoading = false;
 
   void onSubmit() async {
     final form = formKey.currentState;
+
+    // closing the keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+
     if (form != null && form.validate()) {
       form.save();
 
-      // closing the keyboard
-      FocusManager.instance.primaryFocus?.unfocus();
 
       // loading
       setState(() => submitBtnLoading = true);
@@ -68,39 +73,42 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           body: jsonEncode(
             <String, String>{
-              'userEmail': fieldEmail,
+              'email': fieldEmail,
               'password': fieldPassword
             },
           ),
         );
         final responseStatusCode = response.statusCode;
         final responseBody = response.body;
-        final AuthUserModel dummy_user = AuthUserModel(
-          userName: 'aman singh',
-          userProfileImg:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgSmojUgwjIB87c4Q0hLCAyl__oiTySWGWJUZtUNHlHjBALLzTsu_vMHYMaEwLts4QEoo&usqp=CAU',
-          userFirstName: 'aman',
-          userLastName: 'singh',
-        );
 
-        // setting dummy user
-        setUserDetailsHelper(dummy_user);
-
-        // going to home screen
-        if (mounted) {
-          Navigator.pushNamed(context, homepageScreenRoute);
-        }
+        print('response responseStatusCode $responseStatusCode');
+        print('response responseBody $responseBody');
 
         if (responseStatusCode == 200) {
+          final AuthUserModel dummy_user = AuthUserModel(
+            userName: 'aman singh',
+            userProfileImg:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgSmojUgwjIB87c4Q0hLCAyl__oiTySWGWJUZtUNHlHjBALLzTsu_vMHYMaEwLts4QEoo&usqp=CAU',
+            userFirstName: 'aman',
+            userLastName: 'singh',
+          );
+          // setting dummy user
+          setUserDetailsHelper(dummy_user);
+
+
+          if (mounted) {
+            // showing error
+            ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage);
+
+            // navigation to homepage
+            Navigator.pushNamed(context, homepageScreenRoute);
+          }
         } else {
           if (mounted) {
             // showing error
             ScaffoldMessenger.of(context).showSnackBar(snackBarErrorMessage);
           }
         }
-
-        print('responseStatusCode ${responseStatusCode}');
-        print('responseBody ${responseBody}');
       } catch (err) {
         print('Error Occurred: $err');
       }
@@ -237,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           horizontal: 8,
                         ),
                         child: Text(
-                          AUTH_CREATE_NEW_ACCOUNT,
+                          AUTH_NO_ACCOUNT,
                           style: authStylesLinkText,
                         ),
                       ),

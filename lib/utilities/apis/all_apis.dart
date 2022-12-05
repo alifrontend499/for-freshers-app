@@ -5,3 +5,5 @@ String apiGetTestQuestionsDetails(String id) => '${path}get_quiz_question_answer
 
 const String apiLoginPath = 'user/login';
 const String apiLogin = path + apiLoginPath;
+const String apiRegisterPath = 'user/register';
+const String apiRegister = path + apiRegisterPath;
