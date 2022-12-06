@@ -1,4 +1,4 @@
-import 'package:app/utilities/helpers/helpers.dart';
+import 'package:app/screens/auth/auth_consts.dart';
 import 'package:flutter/material.dart';
 
 // screen | consts
@@ -16,11 +16,22 @@ import 'package:app/global/colors/global_colors.dart';
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
+// model
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
+
+// helpers
+import 'package:app/utilities/helpers/appLogout.dart';
+import 'package:app/utilities/helpers/helpers.dart';
 
 final globalScaffoldKey = GlobalKey<ScaffoldState>();
 const double defaultGap = 15.0;
 const double nbLinkBottomGap = 8.0;
+
+// snackbar | success
+const SnackBar snackBarSuccessMessage = SnackBar(
+  content: Text(SNACK_MSG_LOGOUT_SUCCESS),
+  backgroundColor: Colors.greenAccent,
+);
 
 class GlobalNavigationDrawer extends StatefulWidget {
   const GlobalNavigationDrawer({Key? key}) : super(key: key);
@@ -50,6 +61,22 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
       isUserLoggedIn = isLoggedIn;
       userDetails = userDetailsRaw;
     });
+  }
+
+  // log user out
+  void logUserOut() async {
+    // closing the dialog
+    Navigator.pop(context);
+    // closing the left drawer
+    Navigator.of(context).pop();
+
+    // logging user out
+    appLogout();
+
+    // hide all existing snack bars
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    // showing snack bar
+    ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage);
   }
 
   @override
@@ -124,8 +151,16 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
             ),
           ),
 
-          navigationLinkLogout(),
-          const SizedBox(height: 5),
+          if (isUserLoggedIn) ...[
+            Padding(
+              padding: const EdgeInsets.only(
+                left: defaultGap - 5,
+                right: defaultGap - 5,
+              ),
+              child: navigationLinkLogout(),
+            ),
+            const SizedBox(height: defaultGap - 5),
+          ],
         ],
       ),
     );
@@ -182,7 +217,46 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
   // navigation link | logout
   Widget navigationLinkLogout() {
     return InkWell(
-      onTap: () {},
+      onTap: () => showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            titlePadding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 10),
+            contentPadding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+            actionsPadding: const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 10),
+            title: Text(
+              "Logging out",
+              style: logoutDialogTitleStyles,
+            ),
+            content: Text(
+              'Are you sure you want to logout?',
+              style: logoutDialogContentStyles,
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: logoutDialogBtnCancel,
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => logUserOut(),
+                      style: logoutDialogBtnOk,
+                      child: const Text('Ok'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }),
+      ),
       highlightColor: globalColorInkWellHighlight,
       borderRadius: BorderRadius.circular(10),
       child: Container(

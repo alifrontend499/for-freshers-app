@@ -1,6 +1,10 @@
+// OTHERS
 const String AUTH_NO_ACCOUNT = 'Do not have an account';
 const String AUTH_CREATE_NEW_ACCOUNT = 'Already have an account';
 const String AUTH_ALREADY_HAVE_AN_ACCOUNT = 'Already have an account';
+
+// SNACK BAR
+const String SNACK_MSG_LOGOUT_SUCCESS = 'Logout Successful';
 
 // VALIDATIONS
 const String VALIDATION_ERROR_EMPTY_FIELD = 'The field can not be empty';
