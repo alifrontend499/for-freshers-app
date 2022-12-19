@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-// -- consts | screen
-import 'package:app/screens/home/home_consts.dart';
-
 // -- components | screen
 import 'package:app/screens/home/components/app_bar/app_bar_component.dart';
 import 'package:app/screens/home/components/tests_listing/tests_listing_header_component.dart';
@@ -32,6 +29,7 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<TestModal>> allTests = Future(() => []);
   bool contentLoading = false;
 
@@ -90,19 +88,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
     return allTestsData;
   }
 
+  // on pull to refresh
   Future<void> onRefresh() async {
     // loading
     setState(() => contentLoading = true);
-
     final Future<List<TestModal>> data = getData();
-
     // assigning data
     allTests = data;
-
     // loading
     setState(() => contentLoading = false);
   }
 
+  // on back press
   Future<bool> onWillPop() async {
     return false;
   }
@@ -110,10 +107,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: globalScaffoldKey,
+      key: scaffoldKey,
       backgroundColor: Colors.white,
-      appBar: getHomeAppBar(context),
       drawer: const GlobalNavigationDrawer(),
+      appBar: getHomeAppBar(context, scaffoldKey),
       body: WillPopScope(
         onWillPop: onWillPop,
         child: FutureBuilder(
@@ -157,6 +154,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 TestCard(
+                                  testId: testItem.testId.toString(),
                                   testName: testItem.testName,
                                   testType: testItem.testType,
                                   testQuestions: testItem.testQuestions,

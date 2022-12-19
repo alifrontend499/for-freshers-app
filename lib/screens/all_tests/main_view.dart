@@ -42,6 +42,7 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TestCard(
+                testId: item.testId.toString(),
                 testType: item.testType,
                 testName: item.testName,
                 testQuestions: item.testQuestions,

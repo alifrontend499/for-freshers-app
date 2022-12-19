@@ -1,3 +1,4 @@
+import 'package:app/global/state/global_state.dart';
 import 'package:flutter/material.dart';
 
 // -- colors | global
@@ -18,33 +19,32 @@ import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dar
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
+// -- package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // -- screens
 import 'package:app/screens/test_view/main_view.dart';
 
-class TestDetailsScreen extends StatefulWidget {
-  final String testId;
-  final String testName;
-  final String testImg;
-  final String testDescription;
-
-  const TestDetailsScreen({
-    Key? key,
-    required this.testId,
-    required this.testName,
-    required this.testImg,
-    required this.testDescription,
-  }) : super(key: key);
+class TestDetailsScreen extends ConsumerStatefulWidget {
+  const TestDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<TestDetailsScreen> createState() => _TestDetailsScreenState();
+  ConsumerState<TestDetailsScreen> createState() => _TestDetailsScreenState();
 }
 
-class _TestDetailsScreenState extends State<TestDetailsScreen> {
+class _TestDetailsScreenState extends ConsumerState<TestDetailsScreen> {
+  final String defaultTestId = '';
+  final String defaultTestName = '';
+  final String defaultTestImg = '';
+  final String defaultTestDescription = '';
+
   @override
   Widget build(BuildContext context) {
+    final onGoingTest = ref.read(ongoingTestProvider);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: getTestDetailsAppBar(context, widget.testName),
+      appBar: getTestDetailsAppBar(
+          context, onGoingTest?.testName ?? defaultTestName),
       drawer: const GlobalNavigationDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
@@ -70,12 +70,12 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      widget.testName,
+                      onGoingTest?.testName ?? defaultTestName,
                       style: stylesTestHeading,
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.testDescription,
+                      onGoingTest?.testDescription ?? defaultTestDescription,
                       style: stylesTestDescription,
                     ),
                   ],
@@ -95,17 +95,15 @@ class _TestDetailsScreenState extends State<TestDetailsScreen> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TestViewScreen(
-                          testName: widget.testName,
-                          testId: widget.testId,
-                        ),
+                        builder: (context) => const TestViewScreen(),
                       ),
                     ),
                     child: const Text(SCREEN_SUBMIT_BUTTON),
                   ),
                   const SizedBox(height: 15),
                   InkWell(
-                    onTap: () => Navigator.pushNamed(context, homepageScreenRoute),
+                    onTap: () =>
+                        Navigator.pushNamed(context, homepageScreenRoute),
                     highlightColor: globalColorInkWellHighlight,
                     borderRadius: BorderRadius.circular(5),
                     child: const Padding(

@@ -10,7 +10,7 @@ import 'package:app/global/state/global_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // to update selected answers
-void updateSelectedAnswersProvider(WidgetRef ref, SelectedAnswerModel newItem) {
+void updateSelectedAnswersProviderGlobalHelper(WidgetRef ref, SelectedAnswerModel newItem) {
   // getting existing answers
   final List<SelectedAnswerModel> currentList = ref.read(selectedAnswersProvider);
 
@@ -24,10 +24,32 @@ void updateSelectedAnswersProvider(WidgetRef ref, SelectedAnswerModel newItem) {
   print('state updated');
 }
 
-// to delete selected answers
-void deleteSelectedAnswersProvider(WidgetRef ref) {
+// when test is completed
+void retryTestGlobalHelper(WidgetRef ref) {
   // updating state
   ref.watch(selectedAnswersProvider.notifier).state = [];
+  ref.watch(isAnswerSelectedProvider.notifier).state = false;
+
+  // done
+  print('state updated');
+}
+
+// when test is completed
+void testCanceledGlobalHelper(WidgetRef ref) {
+  // updating state
+  ref.watch(selectedAnswersProvider.notifier).state = [];
+  ref.watch(isAnswerSelectedProvider.notifier).state = false;
+
+  // done
+  print('state updated');
+}
+
+// when test is completed
+void testCompleteGlobalHelper(WidgetRef ref) {
+  // updating state
+  ref.watch(selectedAnswersProvider.notifier).state = [];
+  ref.watch(isAnswerSelectedProvider.notifier).state = false;
+  ref.watch(ongoingTestProvider.notifier).state = null;
 
   // done
   print('state updated');

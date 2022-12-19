@@ -1,3 +1,4 @@
+import 'package:app/utilities/routing/routing_consts.dart';
 import 'package:flutter/material.dart';
 
 // -- settings | global
@@ -63,13 +64,10 @@ class CancelTestDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             // deleting selected answer state
-            deleteSelectedAnswersProvider(parentRef);
-
-            // setting default for | setting global button enable/disable
-            parentRef.read(isAnswerSelectedProvider.notifier).state = false;
+            testCanceledGlobalHelper(parentRef);
 
             Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.pushNamed(context, homepageScreenRoute);
           },
           style: ElevatedButton.styleFrom(
             elevation: 0,

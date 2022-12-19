@@ -66,7 +66,7 @@ class _TestOptionState extends ConsumerState<TestOption> {
     ref.watch(isAnswerSelectedProvider.notifier).state = true;
 
     // setting global state for
-    updateSelectedAnswersProvider(
+    updateSelectedAnswersProviderGlobalHelper(
       ref,
       SelectedAnswerModel(
         questionId: widget.questionData.id,

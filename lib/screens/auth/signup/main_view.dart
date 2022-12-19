@@ -83,17 +83,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final responseStatusCode = response.statusCode;
         final responseBody = response.body;
 
-        print('response responseStatusCode $responseStatusCode');
-        print('response responseBody $responseBody');
+        // print('response responseStatusCode $responseStatusCode');
+        // print('response responseBody $responseBody');
 
         if (responseStatusCode == 200) {
-
           if (mounted) {
             // showing message
             ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage);
 
             // navigation to homepage
-            // Navigator.pushNamed(context, homepageScreenRoute);
+            Navigator.pushNamed(context, loginScreenRoute);
           }
         } else {
           // showing message
@@ -101,8 +100,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ScaffoldMessenger.of(context).showSnackBar(snackBarErrorMessage);
           }
         }
-
-
       } catch (err) {
         print('Error Occurred: $err');
       }

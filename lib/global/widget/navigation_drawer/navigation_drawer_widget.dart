@@ -1,4 +1,9 @@
+import 'package:app/global/consts/global_consts.dart';
+import 'package:app/global/state/global_state.dart';
 import 'package:app/screens/auth/auth_consts.dart';
+import 'package:app/screens/auth/login/main_view.dart';
+import 'package:app/screens/home/main_view.dart';
+import 'package:app/screens/list_all_tests/main_view.dart';
 import 'package:flutter/material.dart';
 
 // screen | consts
@@ -16,14 +21,18 @@ import 'package:app/global/colors/global_colors.dart';
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';
 
+// -- helpers | widget
+import 'package:app/global/widget/helpers/navigation_drawer_helpers.dart';
+
+// -- package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // model
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
 // helpers
 import 'package:app/utilities/helpers/appLogout.dart';
-import 'package:app/utilities/helpers/helpers.dart';
 
-final globalScaffoldKey = GlobalKey<ScaffoldState>();
 const double defaultGap = 15.0;
 const double nbLinkBottomGap = 8.0;
 
@@ -33,14 +42,16 @@ const SnackBar snackBarSuccessMessage = SnackBar(
   backgroundColor: Colors.greenAccent,
 );
 
-class GlobalNavigationDrawer extends StatefulWidget {
+class GlobalNavigationDrawer extends ConsumerStatefulWidget {
   const GlobalNavigationDrawer({Key? key}) : super(key: key);
 
   @override
-  State<GlobalNavigationDrawer> createState() => _GlobalNavigationDrawerState();
+  ConsumerState<GlobalNavigationDrawer> createState() =>
+      _GlobalNavigationDrawerState();
 }
 
-class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
+class _GlobalNavigationDrawerState
+    extends ConsumerState<GlobalNavigationDrawer> {
   bool isUserLoggedIn = false;
   late AuthUserModel userDetails;
 
@@ -56,11 +67,14 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
   void getUserDetails() async {
     bool isLoggedIn = await isUserLoggedInHelper();
     AuthUserModel userDetailsRaw = await getUserDetailsHelper();
-    // setting value
-    setState(() {
-      isUserLoggedIn = isLoggedIn;
-      userDetails = userDetailsRaw;
-    });
+
+    if (isLoggedIn) {
+      // setting value
+      setState(() {
+        isUserLoggedIn = isLoggedIn;
+        userDetails = userDetailsRaw;
+      });
+    }
   }
 
   // log user out
@@ -79,8 +93,14 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
     ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage);
   }
 
+  bool checkIsActive(String? activeRouteName, String routeName) {
+    return activeRouteName == routeName;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final activeRouteName = ref.watch(activeRouteNameProvider);
+
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,39 +130,122 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
                       children: [
                         // child | link
                         navigationLink(
+                          () {
+                            // closing the drawer
+                            Navigator.pop(context);
+
+                            if (!checkIsActive(
+                                activeRouteName, GLOBAL_ROUTE_ID_HOME)) {
+                              // setting current page route
+                              setPageRoute(ref, GLOBAL_ROUTE_ID_HOME);
+
+                              // navigation to page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const HomepageScreen()),
+                                ),
+                              );
+                            }
+                          },
                           Icons.home_outlined,
                           'Home',
-                          isActive: true,
+                          isActive: checkIsActive(
+                              activeRouteName, GLOBAL_ROUTE_ID_HOME),
                         ),
                         const SizedBox(height: nbLinkBottomGap),
 
                         // child | link
                         navigationLink(
+                          () {
+                            // closing the drawer
+                            Navigator.pop(context);
+
+                            if (!checkIsActive(
+                                activeRouteName, GLOBAL_ROUTE_ID_ALL_TESTS)) {
+                              // setting current page route
+                              setPageRoute(ref, GLOBAL_ROUTE_ID_ALL_TESTS);
+
+                              // navigation to page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const ListAllTestsScreen()),
+                                ),
+                              );
+                            }
+                          },
                           Icons.lightbulb_circle_outlined,
                           'All Tests',
+                          isActive: checkIsActive(
+                              activeRouteName, GLOBAL_ROUTE_ID_ALL_TESTS),
                         ),
                         const SizedBox(height: nbLinkBottomGap),
 
                         // child | link
-                        navigationLink(
-                          Icons.check_circle_outlined,
-                          'Completed Tests',
-                        ),
+                        // navigationLink(
+                        //   () {
+                        //     if (!checkIsActive(activeRouteName,
+                        //         GLOBAL_ROUTE_ID_COMPLETED_TESTS)) {
+                        //       setPageRoute(
+                        //           ref, GLOBAL_ROUTE_ID_COMPLETED_TESTS);
+                        //     }
+                        //   },
+                        //   Icons.check_circle_outlined,
+                        //   'Completed Tests',
+                        //   isActive: checkIsActive(
+                        //       activeRouteName, GLOBAL_ROUTE_ID_COMPLETED_TESTS),
+                        // ),
+                        // const SizedBox(height: nbLinkBottomGap),
+
+                        // child | link
+                        // navigationLink(
+                        //   () {
+                        //     if (!checkIsActive(activeRouteName,
+                        //         GLOBAL_ROUTE_ID_PENDING_TESTS)) {
+                        //       setPageRoute(ref, GLOBAL_ROUTE_ID_PENDING_TESTS);
+                        //     }
+                        //   },
+                        //   Icons.timelapse_sharp,
+                        //   'Pending Tests',
+                        //   isActive: checkIsActive(
+                        //       activeRouteName, GLOBAL_ROUTE_ID_PENDING_TESTS),
+                        // ),
+                        // const SizedBox(height: nbLinkBottomGap),
+
+                        // child | link
+                        navigationLink(() {
+                          if (!isUserLoggedIn) {
+                            // if the user is not logged in
+                            // closing the drawer
+                            Navigator.pop(context);
+                            // navigation to page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: ((context) => const LoginScreen()),
+                              ),
+                            );
+                          }
+                        }, Icons.star_outline, 'Get Premium',
+                            isActive: false, iconSize: 23),
                         const SizedBox(height: nbLinkBottomGap),
 
                         // child | link
-                        navigationLink(
-                          Icons.timelapse_sharp,
-                          'Pending Tests',
-                        ),
-                        const SizedBox(height: nbLinkBottomGap),
-
-                        // child | link
-                        navigationLink(
-                          Icons.star_outline,
-                          'Get Premium',
-                        ),
-                        const SizedBox(height: 8),
+                        // navigationLink(
+                        //       () {
+                        //     if (!checkIsActive(activeRouteName,
+                        //         GLOBAL_ROUTE_ID_GET_SETTINGS)) {
+                        //       setPageRoute(ref, GLOBAL_ROUTE_ID_GET_SETTINGS);
+                        //     }
+                        //   },
+                        //   Icons.settings,
+                        //   'Settings',
+                        //   isActive: checkIsActive(activeRouteName, GLOBAL_ROUTE_ID_GET_SETTINGS),
+                        // ),
+                        // const SizedBox(height: nbLinkBottomGap),
                       ],
                     ),
                   ),
@@ -168,13 +271,14 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
 
   // navigation link
   Widget navigationLink(
+    Function onTap,
     IconData linkIcon,
     String linkText, {
     double iconSize = 22,
     bool isActive = false,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: () => onTap(),
       highlightColor: globalColorInkWellHighlight,
       borderRadius: BorderRadius.circular(10),
       child: Container(
@@ -221,9 +325,12 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
         context: context,
         builder: ((context) {
           return AlertDialog(
-            titlePadding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 10),
-            contentPadding: const EdgeInsets.only(left: 25, right: 25, bottom: 15),
-            actionsPadding: const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 10),
+            titlePadding:
+                const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 10),
+            contentPadding:
+                const EdgeInsets.only(left: 25, right: 25, bottom: 15),
+            actionsPadding:
+                const EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 10),
             title: Text(
               "Logging out",
               style: logoutDialogTitleStyles,
@@ -348,9 +455,7 @@ class _GlobalNavigationDrawerState extends State<GlobalNavigationDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isUserLoggedIn
-                        ? "${getCapitalizeTextHelper(userDetails.userFirstName)} ${getCapitalizeTextHelper(userDetails.userLastName)}"
-                        : SCREEN_SIGN_IN,
+                    isUserLoggedIn ? userDetails.userName : SCREEN_SIGN_IN,
                     style: ndStylesTopBarHead,
                   ),
                   const SizedBox(

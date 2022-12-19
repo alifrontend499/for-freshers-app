@@ -65,6 +65,10 @@ class _TestScreenState extends State<TestScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              if(true) ...[
+                const SizedBox(height: 15),
+                Image.network('https://miro.medium.com/max/1400/1*DvJgeV_GHPkkA2aXq3Vr5g.png')
+              ],
             ],
           ),
           const SizedBox(height: 50),

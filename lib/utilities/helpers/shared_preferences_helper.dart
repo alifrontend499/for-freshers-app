@@ -10,12 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
 // auth
+// getter | is user logged
 Future<bool> isUserLoggedInHelper() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getBool(SHARED_PREF_KEY_TO_STORE_IS_USER_LOGGED_IN) ??
       false;
 }
 
+// setter | user details
 Future<void> setUserDetailsHelper(AuthUserModel userDetails) async {
   final sharedPrefs = await SharedPreferences.getInstance();
   final encodedUserDetails = jsonEncode(userDetails.toJson());
@@ -24,7 +26,7 @@ Future<void> setUserDetailsHelper(AuthUserModel userDetails) async {
       SHARED_PREF_KEY_TO_STORE_USER_DETAILS, encodedUserDetails);
   sharedPrefs.setBool(SHARED_PREF_KEY_TO_STORE_IS_USER_LOGGED_IN, true);
 }
-
+// getter | user details
 Future<AuthUserModel> getUserDetailsHelper() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   final String userDetails =
@@ -32,9 +34,25 @@ Future<AuthUserModel> getUserDetailsHelper() async {
   final userDetailsData = jsonDecode(userDetails);
 
   return AuthUserModel(
+    userToken: userDetailsData['userToken'],
+    userId: userDetailsData['userId'],
     userName: userDetailsData['userName'],
+    userEmail: userDetailsData['userEmail'],
     userProfileImg: userDetailsData['userProfileImg'],
-    userFirstName: userDetailsData['userFirstName'],
-    userLastName: userDetailsData['userLastName'],
+    userPhone: userDetailsData['userPhone']
   );
+}
+
+// setter | user details
+Future<void> setUserTokenHelper(String userToken) async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+  // setting user to shared preferences
+  sharedPrefs.setString(SHARED_PREF_KEY_TO_STORE_USER_TOKEN, userToken);
+}
+// getter | user details
+Future<String> getUserTokenHelper() async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+  // setting user to shared preferences
+  final userToken = sharedPrefs.getString(SHARED_PREF_KEY_TO_STORE_USER_TOKEN)!;
+  return userToken;
 }

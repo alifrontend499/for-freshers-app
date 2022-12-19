@@ -1,6 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+
+// -- consts | global
+import 'package:app/global/consts/global_consts.dart';
+
+// -- helpers | navigation drawer
+import 'package:app/global/widget/helpers/navigation_drawer_helpers.dart';
+
+// -- package | riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // -- consts | auth
 import 'package:app/screens/auth/auth_consts.dart';
@@ -38,14 +46,14 @@ const SnackBar snackBarSuccessMessage = SnackBar(
   backgroundColor: Colors.greenAccent,
 );
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   String fieldEmail = 'aman@gmail.com';
   String fieldPassword = '123456';
@@ -60,7 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (form != null && form.validate()) {
       form.save();
-
 
       // loading
       setState(() => submitBtnLoading = true);
@@ -79,27 +86,30 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
         final responseStatusCode = response.statusCode;
-        final responseBody = response.body;
-
-        print('response responseStatusCode $responseStatusCode');
-        print('response responseBody $responseBody');
+        final responseBodyJson = response.body;
+        final responseBody = jsonDecode(responseBodyJson);
 
         if (responseStatusCode == 200) {
-          final AuthUserModel dummy_user = AuthUserModel(
-            userName: 'aman singh',
-            userProfileImg:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgSmojUgwjIB87c4Q0hLCAyl__oiTySWGWJUZtUNHlHjBALLzTsu_vMHYMaEwLts4QEoo&usqp=CAU',
-            userFirstName: 'aman',
-            userLastName: 'singh',
+          final responseData = responseBody['data'];
+          final AuthUserModel authUserToStore = AuthUserModel(
+            userToken: responseData['token'],
+            userId: responseData['userid'].toString(),
+            userName: responseData['name'],
+            userEmail: responseData['email'],
+            userPhone: responseData['phone'].toString(),
+            userProfileImg: responseData['image']
           );
-          // setting dummy user
-          setUserDetailsHelper(dummy_user);
-
+          // setting auth user
+          setUserDetailsHelper(authUserToStore);
+          // setting user token
+          setUserTokenHelper(responseData['token']);
 
           if (mounted) {
             // showing error
             ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage);
 
+            // setting current page route
+            setPageRoute(ref, GLOBAL_ROUTE_ID_HOME);
             // navigation to homepage
             Navigator.pushNamed(context, homepageScreenRoute);
           }
@@ -272,6 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // errorStyle: stylesInputError,
         ),
         onSaved: (value) => setState(() => fieldEmail = value!),
+        initialValue: fieldEmail,
         validator: (value) {
           const emailPattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
           final regExpEmail = RegExp(emailPattern);
@@ -299,6 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
           // errorStyle: stylesInputError,
         ),
+        initialValue: fieldPassword,
         onSaved: (value) => setState(() => fieldPassword = value!),
         validator: (value) {
           if (value!.isEmpty) {

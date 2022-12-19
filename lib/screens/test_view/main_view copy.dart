@@ -77,13 +77,9 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
   Future<void> initialStateSetup() async {
     final dataNew = ref.watch(selectedAnswersProvider);
-    print('dataNew ${dataNew}');
 
     // setting default for | setting global button enable/disable
     ref.read(isAnswerSelectedProvider.notifier).state = false;
-
-    // setting default for | if the question is completed or not
-    ref.read(isQuestionCompletedProvider.notifier).state = false;
   }
 
   // get questions list

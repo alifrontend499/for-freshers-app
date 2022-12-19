@@ -15,7 +15,7 @@ const String VALIDATION_ERROR_VALID_CONFIRM_PASSWORD = 'Confirm password should 
 // RESPONSES
 const String AUTH_RESPONSE_INVALID_USER = 'Invalid User';
 const String AUTH_RESPONSE_USER_NOT_FOUND = 'User not found';
-const String AUTH_RESPONSE_SIGNUP_SUCCESS = 'User create successful.';
+const String AUTH_RESPONSE_SIGNUP_SUCCESS = 'User create successful. please login';
 const String AUTH_RESPONSE_LOGIN_SUCCESS = 'Login successful';
 
 // INPUT HINTS

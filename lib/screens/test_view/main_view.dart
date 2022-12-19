@@ -42,13 +42,8 @@ import 'package:app/screens/test_view/dialog/cancel_test_dialog.dart';
 import 'package:app/screens/test_view/pages/test_result/test_result_view.dart';
 
 class TestViewScreen extends ConsumerStatefulWidget {
-  final String testId;
-  final String testName;
-
   const TestViewScreen({
-    Key? key,
-    required this.testId,
-    required this.testName,
+    Key? key
   }) : super(key: key);
 
   @override
@@ -76,13 +71,10 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
   Future<void> initialStateSetup() async {
     final dataNew = ref.watch(selectedAnswersProvider);
-    print('dataNew ${dataNew}');
 
     // setting default for | setting global button enable/disable
     ref.read(isAnswerSelectedProvider.notifier).state = false;
-
-    // setting default for | if the question is completed or not
-    ref.read(isQuestionCompletedProvider.notifier).state = false;
+    ref.read(isAnswerSelectedProvider.notifier).state = false;
   }
 
   // get questions list
@@ -131,9 +123,10 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     setState(() => contentLoading = true);
 
     try {
+      final onGoingTest = ref.read(ongoingTestProvider);
       // getting data from network
       final response =
-          await http.get(Uri.parse(apiGetTestQuestionsDetails(widget.testId)));
+          await http.get(Uri.parse(apiGetTestQuestionsDetails(onGoingTest?.testId ?? '')));
       final responseStatusCode = response.statusCode;
       final responseBody = response.body;
       final responseBodyData = jsonDecode(responseBody);
@@ -193,10 +186,11 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   @override
   Widget build(BuildContext context) {
     final isAnswerSelected = ref.watch(isAnswerSelectedProvider);
+    final onGoingTest = ref.read(ongoingTestProvider);
 
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: getTestViewAppBar(context, widget.testName, ref, contentLoading),
+      appBar: getTestViewAppBar(context, onGoingTest?.testName ?? '', ref, contentLoading),
       body: WillPopScope(
         onWillPop: onWillPop,
         child: contentLoading

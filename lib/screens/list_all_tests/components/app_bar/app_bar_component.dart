@@ -12,7 +12,7 @@ import 'package:app/global/settings/global_settings.dart';
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
-PreferredSize getHomeAppBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) {
+PreferredSize getListAllTestsAppBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) {
   PreferredSize appBar = PreferredSize(
     preferredSize: globalSettingsAppBarSize,
     child: AppBar(
@@ -29,7 +29,7 @@ PreferredSize getHomeAppBar(BuildContext context, GlobalKey<ScaffoldState> scaff
         splashRadius: globalSettingsAppBarLeadingSplashRadius,
       ),
       title: const Text(
-        'Ontario',
+        'All Tests',
         style: screenStylesAppBarTitle,
       ),
       titleSpacing: 0,

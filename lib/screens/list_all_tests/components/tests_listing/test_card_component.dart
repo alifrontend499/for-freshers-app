@@ -12,17 +12,17 @@ import 'package:app/global/colors/global_colors.dart';
 // -- styles | screen
 import 'package:app/screens/home/styles/home_styles.dart';
 
-// screens
-import 'package:app/screens/test_details/main_view.dart';
-
-// -- package | unicons
-import 'package:unicons/unicons.dart';
-
 // -- package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // dialog
 import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
+
+// -- package | unicons
+import 'package:unicons/unicons.dart';
+
+// screen
+import 'package:app/screens/test_details/main_view.dart';
 
 // helpers
 import 'package:app/utilities/helpers/helpers.dart';

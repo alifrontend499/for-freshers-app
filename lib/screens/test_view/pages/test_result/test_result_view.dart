@@ -1,3 +1,5 @@
+import 'package:app/screens/test_details/main_view.dart';
+import 'package:app/screens/test_view/main_view.dart';
 import 'package:flutter/material.dart';
 
 // global | routes
@@ -42,6 +44,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
   double rightQuestionsPercentage = 0;
   int totalQuestionsCount = 0;
   int rightQuestionsCount = 0;
+  int passPercentage = 50;
 
   @override
   void initState() {
@@ -53,11 +56,14 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
   }
 
   Future<void> getData() async {
-    final List<SelectedAnswerModel> questionsData = ref.read(selectedAnswersProvider);
-    final rightQuestions = questionsData.where((element) => element.wasRight == true);
+    final List<SelectedAnswerModel> questionsData =
+        ref.read(selectedAnswersProvider);
+    final rightQuestions =
+        questionsData.where((element) => element.wasRight == true);
     final int totalQuestionsCountRaw = questionsData.length;
     final int rightQuestionsCountRaw = rightQuestions.length;
-    double percentage = getPercentageHelper(questionsData.length, rightQuestions.length);
+    double percentage =
+        getPercentageHelper(questionsData.length, rightQuestions.length);
     setState(() {
       totalQuestionsCount = totalQuestionsCountRaw;
       rightQuestionsCount = rightQuestionsCountRaw;
@@ -162,6 +168,32 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 25),
+
+                    // other info
+                    Text(
+                      rightQuestionsPercentage > passPercentage
+                          ? 'PASSED'
+                          : 'FAILED',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                        color: rightQuestionsPercentage > passPercentage
+                            ? Colors.green
+                            : Colors.redAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    Text(
+                      rightQuestionsPercentage > passPercentage
+                          ? 'You have passed the test with ${rightQuestionsPercentage.toString()}% total score.'
+                          : 'You should score at least 50 percent to pass the test. you can always try again',
+                      textAlign: TextAlign.center,
+                      style:
+                          const TextStyle(fontSize: 16, color: Colors.black87),
+                    ),
                   ],
                 ),
               ),
@@ -173,42 +205,53 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // child | button
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     // deleting selected answer state
-                  //     deleteSelectedAnswersProvider(ref);
-                  //   },
-                  //   style: ElevatedButton.styleFrom(
-                  //     minimumSize: const Size(
-                  //       double.minPositive,
-                  //       globalSettingsDefaultButtonHeight,
-                  //     ),
-                  //     backgroundColor: Colors.white.withOpacity(.7),
-                  //     splashFactory: NoSplash.splashFactory,
-                  //     textStyle: const TextStyle(
-                  //       fontSize: 15,
-                  //       fontWeight: FontWeight.w600,
-                  //     ),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(5),
-                  //     ),
-                  //   ),
-                  //   child: const Text(
-                  //     RESULT_PAGE_RETRY_TEST,
-                  //     style: TextStyle(color: Colors.black),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 15),
+                  // child | button | retry test
+                  if(rightQuestionsPercentage < passPercentage) ...[
+                    ElevatedButton(
+                      onPressed: () {
+                        // deleting selected answer state
+                        retryTestGlobalHelper(ref);
+
+                        // navigating to test
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TestViewScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(
+                          double.minPositive,
+                          globalSettingsDefaultButtonHeight,
+                        ),
+                        backgroundColor: Colors.white.withOpacity(.7),
+                        splashFactory: NoSplash.splashFactory,
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: const Text(
+                        RESULT_PAGE_RETRY_TEST,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                  ],
 
                   // child | button
                   ElevatedButton(
                     onPressed: () {
                       // deleting selected answer state
-                      deleteSelectedAnswersProvider(ref);
+                      testCompleteGlobalHelper(ref);
 
                       // navigating to home
-                      Navigator.pushNamedAndRemoveUntil(context, homepageScreenRoute, (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, homepageScreenRoute, (route) => false);
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.minPositive,
