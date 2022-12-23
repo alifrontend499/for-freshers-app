@@ -1,42 +1,32 @@
+import 'package:flutter/material.dart';
+
+// -- package | imports
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// -- global |  imports
 import 'package:app/global/consts/global_consts.dart';
 import 'package:app/global/state/global_state.dart';
+import 'package:app/global/colors/global_colors.dart';
+import 'package:app/global/widget/navigation_drawer/navigation_drawer_consts.dart';
+
+// -- screen | imports
 import 'package:app/screens/auth/auth_consts.dart';
 import 'package:app/screens/auth/login/main_view.dart';
 import 'package:app/screens/home/main_view.dart';
 import 'package:app/screens/list_all_tests/main_view.dart';
-import 'package:flutter/material.dart';
-
-// screen | consts
-import 'package:app/global/widget/navigation_drawer/navigation_drawer_consts.dart';
-
-// helpers
-import 'package:app/utilities/helpers/shared_preferences_helper.dart';
-
-// -- drawer | styles
 import 'package:app/global/widget/navigation_drawer/styles/navigation_drawer_styles.dart';
-
-// -- global | colors
-import 'package:app/global/colors/global_colors.dart';
-
-// -- all routes consts
-import 'package:app/utilities/routing/routing_consts.dart';
-
-// -- helpers | widget
 import 'package:app/global/widget/helpers/navigation_drawer_helpers.dart';
 
-// -- package | riverpod
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// model
-import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
-
-// helpers
+// -- utilities |  imports
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
+import 'package:app/utilities/routing/routing_consts.dart';
 import 'package:app/utilities/helpers/appLogout.dart';
+import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
 const double defaultGap = 15.0;
 const double nbLinkBottomGap = 8.0;
 
-// snackbar | success
+// snack bar | success
 const SnackBar snackBarSuccessMessage = SnackBar(
   content: Text(SNACK_MSG_LOGOUT_SUCCESS),
   backgroundColor: Colors.greenAccent,
@@ -416,10 +406,12 @@ class _GlobalNavigationDrawerState
         onTap: () {
           // closing drawer
           Navigator.pop(context);
+          // setting current page route
+          setPageRoute(ref, '');
 
           if (isUserLoggedIn) {
             // if user logged in
-
+            Navigator.pushNamed(context, userProfileScreenRoute);
           } else {
             // navigating
             Navigator.pushNamed(context, loginScreenRoute);
