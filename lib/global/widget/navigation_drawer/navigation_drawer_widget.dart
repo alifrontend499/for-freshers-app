@@ -75,7 +75,7 @@ class _GlobalNavigationDrawerState
     Navigator.of(context).pop();
 
     // logging user out
-    appLogout();
+    appLogout(context, mounted);
 
     // hide all existing snack bars
     ScaffoldMessenger.of(context).hideCurrentSnackBar();

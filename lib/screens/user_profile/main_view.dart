@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+// -- packages | imports
+import 'package:page_transition/page_transition.dart';
+
 // -- global |  imports
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 import 'package:app/global/colors/global_colors.dart';
 
 // -- screen |  imports
 import 'package:app/screens/user_profile/components/app_bar/app_bar_component.dart';
+import 'package:app/screens/user_profile/screens/edit_profile.dart';
 
 // -- utilities |  imports
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
@@ -43,7 +47,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: globalColorLightGrey,
+      backgroundColor: Colors.white,
       drawer: const GlobalNavigationDrawer(),
       appBar: getUserProfileAppBar(context),
       body: SingleChildScrollView(
@@ -57,22 +61,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               imageContainer(),
               const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: globalColorAppPrimary,
-                  padding: const EdgeInsets.only(
-                    top: 9,
-                    bottom: 7,
-                    left: 24,
-                    right: 24,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text('Edit Profile'),
-              ),
+              // child | edit profile button
+              editProfileButton(),
               const SizedBox(height: 15),
 
               // child | profile name
@@ -101,6 +91,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 'Password',
                 '**********',
                 Icons.password,
+                isPasswordField: true,
               ),
 
               // child | profile phone
@@ -127,7 +118,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: userDetails.userProfileImg.isNotEmpty
-                ? Image.network(userDetails.userProfileImg)
+                // ? Image.network(userDetails.userProfileImg)
+                ? Image.network(tempUserImg)
                 : Container(
                     color: Colors.grey.withOpacity(.4),
                     child: const Icon(
@@ -173,9 +165,38 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  // profile edit button
+  Widget editProfileButton() {
+    return ElevatedButton(
+      onPressed: () => Navigator.of(context).push(
+        PageTransition(
+          type: PageTransitionType.rightToLeft,
+          child: EditProfileScreen(userDetails: userDetails),
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: globalColorAppPrimary,
+        padding: const EdgeInsets.only(
+          top: 9,
+          bottom: 7,
+          left: 24,
+          right: 24,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: const Text('Edit Profile'),
+    );
+  }
+
   // profile item containers
   Widget profileItemContainer(
-      String itemName, String itemValue, IconData icon) {
+    String itemName,
+    String itemValue,
+    IconData icon, {
+    bool isPasswordField = false,
+  }) {
     return InkWell(
       child: Container(
         padding: const EdgeInsets.only(
@@ -184,9 +205,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           left: 20,
           right: 20,
         ),
-        // decoration: const BoxDecoration(
-        //   color: Colors.white,
-        // ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -228,20 +246,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ],
               ),
             ),
+
+            // child | password content
+            if (isPasswordField) ...[
+              Container(
+                height: 37,
+                width: 37,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.grey.withOpacity(.5),
+                ),
+                child: const Icon(
+                  Icons.edit,
+                  size: 18,
+                  color: globalColorAppPrimary,
+                ),
+              )
+            ],
           ],
         ),
-      ),
-    );
-  }
-
-  // profile item divider
-  Widget profileDivider() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Divider(
-        color: Colors.grey,
-        thickness: .5,
-        height: 0,
       ),
     );
   }
