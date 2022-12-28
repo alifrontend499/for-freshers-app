@@ -12,8 +12,8 @@ import 'package:app/screens/home/styles/home_styles.dart';
 // -- consts | screen
 import 'package:app/screens/home/home_consts.dart';
 
-// -- modals | global
-import 'package:app/global/modals/test_modal.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 // -- all routes consts
 import 'package:app/utilities/routing/routing_consts.dart';

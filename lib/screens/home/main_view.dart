@@ -10,8 +10,8 @@ import 'package:app/screens/home/components/tests_listing/test_card_component.da
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
-// -- modals | global
-import 'package:app/global/modals/test_modal.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 // -- http
 import 'package:http/http.dart' as http;
@@ -30,7 +30,7 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  late Future<List<TestModal>> allTests = Future(() => []);
+  late Future<List<TestViewModel>> allTests = Future(() => []);
   bool contentLoading = false;
 
   @override
@@ -41,14 +41,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
     allTests = getData();
   }
 
-  Future<List<TestModal>> getData() async {
+  Future<List<TestViewModel>> getData() async {
     // loading
     setState(() => contentLoading = true);
 
     // getting data from network
     final response = await http.get(Uri.parse(apiListAllTests));
 
-    final List<TestModal> allTestsData = [];
+    final List<TestViewModel> allTestsData = [];
     final responseStatusCode = response.statusCode;
     final responseBody = response.body;
     final responseBodyData = jsonDecode(responseBody);
@@ -75,7 +75,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
           // pushing data item
           allTestsData
-              .add(TestModal(type: item['type'], allTests: allTestsOnly));
+              .add(TestViewModel(type: item['type'], allTests: allTestsOnly));
         }
       }
     } else {
@@ -92,7 +92,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Future<void> onRefresh() async {
     // loading
     setState(() => contentLoading = true);
-    final Future<List<TestModal>> data = getData();
+    final Future<List<TestViewModel>> data = getData();
     // assigning data
     allTests = data;
     // loading
@@ -115,9 +115,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
         onWillPop: onWillPop,
         child: FutureBuilder(
           future: allTests,
-          builder: ((context, AsyncSnapshot<List<TestModal>> snapshot) {
+          builder: ((context, AsyncSnapshot<List<TestViewModel>> snapshot) {
             if (snapshot.hasData) {
-              final List<TestModal> data = snapshot.data!;
+              final List<TestViewModel> data = snapshot.data!;
               return RefreshIndicator(
                 onRefresh: onRefresh,
                 child: ListView.builder(
@@ -126,7 +126,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       vertical: 15, horizontal: 20),
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
-                    final TestModal item = data[index];
+                    final TestViewModel item = data[index];
                     final List<TestSingleModel> twoTestItems =
                     item.allTests.take(2).toList();
 

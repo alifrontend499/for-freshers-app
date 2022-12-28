@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
-// -- modals | global
-import 'package:app/global/modals/test_modal.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 // -- components | screen
 import 'package:app/screens/all_tests/components/app_bar/app_bar_component.dart';

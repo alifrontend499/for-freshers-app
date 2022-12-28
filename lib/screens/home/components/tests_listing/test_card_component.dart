@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// global | modal
+// global | model
 import 'package:app/global/state/models/ongoing_test_model.dart';
 
 // -- state | global

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // -- global | colors
 import 'package:app/global/colors/global_colors.dart';
 
-// -- screen | model
-import 'package:app/screens/test_view/models/question_and_options_model.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 // package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,8 +19,8 @@ import 'package:app/global/state/models/selected_answers_model.dart';
 import 'package:app/global/state/helpers/global_state_helper.dart';
 
 class TestOption extends ConsumerStatefulWidget {
-  final QuestionModel questionData;
-  final List<OptionsModel> optionsData;
+  final QuestionDataModel questionData;
+  final List<OptionsDataModel> optionsData;
 
   const TestOption({
     Key? key,
@@ -33,7 +33,7 @@ class TestOption extends ConsumerStatefulWidget {
 }
 
 class _TestOptionState extends ConsumerState<TestOption> {
-  List<OptionsModel> optionsData = [];
+  List<OptionsDataModel> optionsData = [];
   bool isSelected = false;
   String selectedOptionId = '';
   Color selectedOptionColor = globalColorAppPrimary;
@@ -50,7 +50,7 @@ class _TestOptionState extends ConsumerState<TestOption> {
 
   // when user selects any option
   void checkAnswer(String id) {
-    final OptionsModel selectedOption =
+    final OptionsDataModel selectedOption =
         widget.optionsData.firstWhere((item) => item.id == id);
 
     // setting selected option
@@ -93,7 +93,6 @@ class _TestOptionState extends ConsumerState<TestOption> {
             // child | option
             InkWell(
               onTap: () {
-                print('object');
                 final isAnswerSelected = ref.watch(isAnswerSelectedProvider);
                 if (isAnswerSelected == false) {
                   checkAnswer(dataItem.id);

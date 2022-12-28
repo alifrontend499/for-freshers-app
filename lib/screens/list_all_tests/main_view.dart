@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 // -- global | widget
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
 
-// -- global | modals
-import 'package:app/global/modals/test_modal.dart';
+// -- global | models
+import 'package:app/global/models/test_model.dart';
 
 // -- screen | components
 import 'package:app/screens/list_all_tests/components/app_bar/app_bar_component.dart';
@@ -31,7 +31,7 @@ class ListAllTestsScreen extends StatefulWidget {
 
 class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  late Future<List<TestModal>> allTests = Future(() => []);
+  late Future<List<TestViewModel>> allTests = Future(() => []);
   bool contentLoading = false;
 
   @override
@@ -42,14 +42,14 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
     allTests = getData();
   }
 
-  Future<List<TestModal>> getData() async {
+  Future<List<TestViewModel>> getData() async {
     // loading
     setState(() => contentLoading = true);
 
     // getting data from network
     final response = await http.get(Uri.parse(apiAllTypeTests));
 
-    final List<TestModal> allTestsData = [];
+    final List<TestViewModel> allTestsData = [];
 
     final responseStatusCode = response.statusCode;
     final responseBody = response.body;
@@ -74,7 +74,7 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
           );
 
           // pushing data item
-          allTestsData.add(TestModal(type: item['type'], allTests: allTestsOnly));
+          allTestsData.add(TestViewModel(type: item['type'], allTests: allTestsOnly));
         }
       }
     } else {
@@ -91,7 +91,6 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
   Future<void> onRefresh() async {
     // loading
     setState(() => contentLoading = true);
-    // final Future<List<TestModal>> data = getData();
     // assigning data
     allTests = getData();
     // loading
@@ -114,9 +113,9 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
         onWillPop: onWillPop,
         child: FutureBuilder(
           future: allTests,
-          builder: ((context, AsyncSnapshot<List<TestModal>> snapshot) {
+          builder: ((context, AsyncSnapshot<List<TestViewModel>> snapshot) {
             if (snapshot.hasData) {
-              final List<TestModal> data = snapshot.data!;
+              final List<TestViewModel> data = snapshot.data!;
               return RefreshIndicator(
                 onRefresh: onRefresh,
                 child: ListView.builder(
@@ -125,7 +124,7 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
-                    final TestModal item = data[index];
+                    final TestViewModel item = data[index];
                     final List<TestSingleModel> allTestsData = item.allTests;
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

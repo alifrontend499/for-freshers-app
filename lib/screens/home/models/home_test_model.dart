@@ -1,10 +1,10 @@
 // models
-import 'package:app/global/modals/test_modal.dart';
+import 'package:app/global/models/test_model.dart';
 
 class HomeTestModel {
   final String testType;
   final String totalTests;
-  final List<TestModal> allTests;
+  final List<TestViewModel> allTests;
 
   HomeTestModel({
     required this.testType,

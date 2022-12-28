@@ -6,17 +6,19 @@ import 'package:app/global/consts/global_consts.dart';
 //  package | shared preferences
 import 'package:shared_preferences/shared_preferences.dart';
 
+// -- models | global
+import 'package:app/global/models/test_model.dart';
+
 // model | shared preferences
 import 'package:app/utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
-// auth
+// functions | AUTH
 // getter | is user logged
 Future<bool> isUserLoggedInHelper() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getBool(SHARED_PREF_KEY_TO_STORE_IS_USER_LOGGED_IN) ??
       false;
 }
-
 // setter | user details
 Future<void> setUserDetailsHelper(AuthUserModel userDetails) async {
   final sharedPrefs = await SharedPreferences.getInstance();
@@ -42,7 +44,6 @@ Future<AuthUserModel> getUserDetailsHelper() async {
     userPhone: userDetailsData['userPhone']
   );
 }
-
 // setter | user details
 Future<void> setUserTokenHelper(String userToken) async {
   final sharedPrefs = await SharedPreferences.getInstance();
@@ -55,4 +56,21 @@ Future<String> getUserTokenHelper() async {
   // setting user to shared preferences
   final userToken = sharedPrefs.getString(SHARED_PREF_KEY_TO_STORE_USER_TOKEN)!;
   return userToken;
+}
+
+// functions | QUESTIONS
+// getter | completed test
+Future<void> getCompletedTestHelper(QuestionDataModel completedQuestion) async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+  final String completedTests =
+  sharedPrefs.getString(SHARED_PREF_KEY_TO_STORE_COMPLETED_TESTS)!;
+  final completedTestsData = jsonDecode(completedTests);
+}
+// setter | completed test
+Future<void> setCompletedTestHelper(QuestionDataModel completedQuestion) async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+
+  sharedPrefs.setStringList('data here', ['value', 'hello ']);
+
+
 }

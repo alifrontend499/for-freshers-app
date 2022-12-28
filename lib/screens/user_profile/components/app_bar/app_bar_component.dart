@@ -59,3 +59,30 @@ PreferredSize getUserEditProfileAppBar(BuildContext context) {
 
   return appBar;
 }
+
+PreferredSize getUserEditPasswordAppBar(BuildContext context) {
+  PreferredSize appBar = PreferredSize(
+    preferredSize: globalSettingsAppBarSize,
+    child: AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(
+          Icons.chevron_left,
+          size: globalSettingsAppBarLeadingSize,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+        color: Colors.black,
+        splashColor: Colors.transparent,
+        splashRadius: globalSettingsAppBarLeadingSplashRadius,
+      ),
+      title: const Text(
+        "Reset Password",
+        style: screenStylesAppBarTitle,
+      ),
+      titleSpacing: 0,
+    ),
+  );
+
+  return appBar;
+}

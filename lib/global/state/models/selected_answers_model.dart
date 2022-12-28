@@ -1,10 +1,10 @@
-// models
-import 'package:app/screens/test_view/models/question_and_options_model.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 class SelectedAnswerModel {
   final String questionId;
-  final QuestionModel questionData;
-  final OptionsModel selectedOption;
+  final QuestionDataModel questionData;
+  final OptionsDataModel selectedOption;
   final bool wasRight;
   final DateTime selectedOn;
 

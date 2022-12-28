@@ -1,3 +1,4 @@
+import 'package:app/screens/user_profile/screens/edit_password.dart';
 import 'package:flutter/material.dart';
 
 // -- packages | imports
@@ -249,19 +250,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             // child | password content
             if (isPasswordField) ...[
-              Container(
-                height: 37,
-                width: 37,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey.withOpacity(.5),
+              InkWell(
+                onTap: () => Navigator.of(context).push(
+                  PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    child: const EditPasswordScreen(),
+                  ),
                 ),
-                child: const Icon(
-                  Icons.edit,
-                  size: 18,
-                  color: globalColorAppPrimary,
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  height: 37,
+                  width: 37,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: globalColorLightGrey,
+                  ),
+                  child: const Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: globalColorAppPrimary,
+                  ),
                 ),
-              )
+              ),
             ],
           ],
         ),

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:app/screens/test_view/loading/content_loading_options.dart';
 import 'package:app/screens/test_view/loading/content_loading_question.dart';
 
-// -- screen | model
-import 'package:app/screens/test_view/models/question_and_options_model.dart';
+// -- models | global
+import 'package:app/global/models/test_model.dart';
 
 // -- global | model
 import 'package:app/global/state/models/selected_answers_model.dart';
@@ -78,18 +78,19 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   }
 
   // get questions list
-  List<QuestionModel> getQuestionsList(rawData) {
+  List<QuestionDataModel> getQuestionsList(rawData) {
     if (rawData.isEmpty) return [];
 
-    final List<QuestionModel> data = [];
+    final List<QuestionDataModel> data = [];
 
     for (final dataItem in rawData) {
       // generating questions data
       data.addAll([
-        QuestionModel(
+        QuestionDataModel(
           id: dataItem['id'].toString(),
           quizId: dataItem['quiz_id'],
           name: dataItem['name'],
+          imgUrl: '',
           options: getOptionsList(dataItem['answers']),
         ),
       ]);
@@ -99,13 +100,13 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   }
 
   // get options list
-  List<OptionsModel> getOptionsList(rawData) {
+  List<OptionsDataModel> getOptionsList(rawData) {
     if (rawData.isEmpty) return [];
-    final List<OptionsModel> optionsData = [];
+    final List<OptionsDataModel> optionsData = [];
 
     for (final dataItem in rawData) {
       optionsData.addAll([
-        OptionsModel(
+        OptionsDataModel(
           id: dataItem['id'].toString(),
           optionId: dataItem['question_id'],
           name: dataItem['name'],
@@ -134,7 +135,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
       if (responseStatusCode == 200) {
         final questionsData = responseData['question'];
-        final List<QuestionModel> questions = getQuestionsList(questionsData);
+        final List<QuestionDataModel> questions = getQuestionsList(questionsData);
         List<Widget> widgetList = [];
         setState(() {
           pagesCount = questions.length;
@@ -142,7 +143,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
         int index = 0;
         for (final item in questions) {
-          final List<OptionsModel> currentAnswers = item.options;
+          final List<OptionsDataModel> currentAnswers = item.options;
 
           widgetList.addAll(
             [
@@ -153,6 +154,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                 pagesCount: pagesCount,
                 questionData: item,
                 questionName: item.name,
+                questionImgUrl: item.imgUrl,
                 options: currentAnswers,
               ),
             ],

@@ -44,7 +44,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
   double rightQuestionsPercentage = 0;
   int totalQuestionsCount = 0;
   int rightQuestionsCount = 0;
-  int passPercentage = 50;
+  int passPercentage = 80;
 
   @override
   void initState() {
@@ -55,6 +55,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
     getData();
   }
 
+  // getting selected question data from global state
   Future<void> getData() async {
     final List<SelectedAnswerModel> questionsData =
         ref.read(selectedAnswersProvider);
@@ -71,6 +72,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
     });
   }
 
+  // on back pressed
   Future<bool> onWillPop() async {
     return false;
   }
@@ -189,7 +191,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                     Text(
                       rightQuestionsPercentage > passPercentage
                           ? 'You have passed the test with ${rightQuestionsPercentage.toString()}% total score.'
-                          : 'You should score at least 50 percent to pass the test. you can always try again',
+                          : 'You should score at least $passPercentage percent to pass the test. you can always try again',
                       textAlign: TextAlign.center,
                       style:
                           const TextStyle(fontSize: 16, color: Colors.black87),

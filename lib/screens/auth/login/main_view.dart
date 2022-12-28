@@ -19,7 +19,7 @@ import 'package:app/screens/auth/login/login_consts.dart';
 // -- helpers | shared preference
 import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 
-// -- modal
+// -- model
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
 // -- styles | screen

@@ -1,5 +1,5 @@
 import 'package:app/global/colors/global_colors.dart';
-import 'package:app/screens/test_view/models/question_and_options_model.dart';
+import 'package:app/global/models/test_model.dart';
 import 'package:flutter/material.dart';
 
 // -- screen | styles
@@ -13,9 +13,10 @@ class TestScreen extends StatefulWidget {
   final PageController controller;
   final int pagesCount;
   final int pagesPosition;
-  final QuestionModel questionData;
+  final QuestionDataModel questionData;
   final String questionName;
-  final List<OptionsModel> options;
+  final String questionImgUrl;
+  final List<OptionsDataModel> options;
 
   const TestScreen({
     Key? key,
@@ -25,6 +26,7 @@ class TestScreen extends StatefulWidget {
     required this.pagesCount,
     required this.questionData,
     required this.questionName,
+    required this.questionImgUrl,
     required this.options,
   }) : super(key: key);
 
@@ -65,7 +67,7 @@ class _TestScreenState extends State<TestScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              if(true) ...[
+              if(widget.questionImgUrl.isNotEmpty) ...[
                 const SizedBox(height: 15),
                 Image.network('https://miro.medium.com/max/1400/1*DvJgeV_GHPkkA2aXq3Vr5g.png')
               ],

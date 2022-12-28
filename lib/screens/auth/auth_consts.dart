@@ -20,6 +20,7 @@ const String AUTH_RESPONSE_LOGIN_SUCCESS = 'Login successful';
 
 // INPUT HINTS
 const String INPUT_HINT_EMAIL = 'Email';
+const String INPUT_HINT_OLD_PASSWORD = 'Old Password';
 const String INPUT_HINT_PASSWORD = 'Password';
 const String INPUT_HINT_CONFIRM_PASSWORD = 'Confirm Password';
 const String INPUT_HINT_FULL_NAME = 'Full Name';

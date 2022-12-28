@@ -29,13 +29,4 @@ class AuthUserModel {
     // 'userFirstName': userFirstName,
     // 'userLastName': userLastName,
   };
-
-  getAllProps() {
-    print('userToken ${userToken.isNotEmpty ? userToken : 'no data'}');
-    print('userId ${userId.isNotEmpty ? userId : 'no data'}');
-    print('userName ${userName.isNotEmpty ? userName : 'no data'}');
-    print('userEmail ${userEmail.isNotEmpty ? userEmail : 'no data'}');
-    print('userProfileImg ${userProfileImg.isNotEmpty ? userProfileImg : 'no data'}');
-    print('userPhone ${userPhone.isNotEmpty ? userPhone : 'no data'}');
-  }
 }
