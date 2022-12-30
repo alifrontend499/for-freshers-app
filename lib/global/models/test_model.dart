@@ -1,3 +1,4 @@
+// modal | for screen where user can click start test button
 class TestViewModel {
   final String type;
   final List<TestSingleModel> allTests;
@@ -8,6 +9,7 @@ class TestViewModel {
   });
 }
 
+// modal | for a single test to test view
 class TestSingleModel {
   final int testId;
   final String testType;
@@ -26,8 +28,50 @@ class TestSingleModel {
     required this.isPremium,
     required this.testImg,
   });
+
+  Map<String, dynamic> toJson() => {
+    'testId': testId,
+    'testType': testType,
+    'testName': testName,
+    'testQuestions': testQuestions,
+    'testDescription': testDescription,
+    'isPremium': isPremium,
+    'testImg': testImg,
+  };
 }
 
+// modal | for a complete test that includes all the questions details as well
+class TestModel {
+  final int testId;
+  final String testType;
+  final String testName;
+  final List<QuestionDataModel> testQuestions;
+  final String testDescription;
+  final bool isPremium;
+  final String testImg;
+
+  TestModel({
+    required this.testId,
+    required this.testType,
+    required this.testName,
+    required this.testQuestions,
+    required this.isPremium,
+    required this.testDescription,
+    required this.testImg,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'testId': testId,
+    'testType': testType,
+    'testName': testName,
+    'testQuestions': testQuestions,
+    'testDescription': testDescription,
+    'isPremium': isPremium,
+    'testImg': testImg,
+  };
+}
+
+// modal | for a single question from the test
 class QuestionDataModel {
   final String id;
   final String quizId;
@@ -42,8 +86,17 @@ class QuestionDataModel {
     required this.imgUrl,
     required this.options,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'quizId': quizId,
+    'name': name,
+    'imgUrl': imgUrl,
+    'options': options,
+  };
 }
 
+// modal | for a single options from the question
 class OptionsDataModel {
   final String id;
   final String optionId;

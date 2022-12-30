@@ -6,8 +6,8 @@ import 'package:app/global/settings/global_settings.dart';
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
-class PremiumTestDialog extends StatelessWidget {
-  const PremiumTestDialog({Key? key}) : super(key: key);
+class GlobalPremiumTestDialog extends StatelessWidget {
+  const GlobalPremiumTestDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

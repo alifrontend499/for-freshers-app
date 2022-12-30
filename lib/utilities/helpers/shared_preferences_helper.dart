@@ -57,20 +57,3 @@ Future<String> getUserTokenHelper() async {
   final userToken = sharedPrefs.getString(SHARED_PREF_KEY_TO_STORE_USER_TOKEN)!;
   return userToken;
 }
-
-// functions | QUESTIONS
-// getter | completed test
-Future<void> getCompletedTestHelper(QuestionDataModel completedQuestion) async {
-  final sharedPrefs = await SharedPreferences.getInstance();
-  final String completedTests =
-  sharedPrefs.getString(SHARED_PREF_KEY_TO_STORE_COMPLETED_TESTS)!;
-  final completedTestsData = jsonDecode(completedTests);
-}
-// setter | completed test
-Future<void> setCompletedTestHelper(QuestionDataModel completedQuestion) async {
-  final sharedPrefs = await SharedPreferences.getInstance();
-
-  sharedPrefs.setStringList('data here', ['value', 'hello ']);
-
-
-}

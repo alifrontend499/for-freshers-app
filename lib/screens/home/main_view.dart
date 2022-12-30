@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 // -- components | screen
 import 'package:app/screens/home/components/app_bar/app_bar_component.dart';
-import 'package:app/screens/home/components/tests_listing/tests_listing_header_component.dart';
-import 'package:app/screens/home/components/tests_listing/test_card_component.dart';
 
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
+import 'package:app/global/components/global_test_card/test_card.dart';
+import 'package:app/global/components/global_test_card/test_card_header.dart';
 
 // -- models | global
 import 'package:app/global/models/test_model.dart';
@@ -67,7 +67,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 testName: singleTestItem['name'],
                 testQuestions: singleTestItem['total_questions'].toString(),
                 testDescription: singleTestItem['text'],
-                isPremium: singleTestItem['is_premium'] == 'true' ? true : false,
+                isPremium:
+                    singleTestItem['is_premium'] == 'true' ? true : false,
                 testImg: '',
               ),
             );
@@ -122,19 +123,19 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 onRefresh: onRefresh,
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
                     final TestViewModel item = data[index];
                     final List<TestSingleModel> twoTestItems =
-                    item.allTests.take(2).toList();
+                        item.allTests.take(2).toList();
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // -- child | header
-                        TestListingHeader(
+                        TestCardHeader(
                           testType: item.type,
                           testsCount: item.allTests.length,
                           allTests: item.allTests,
@@ -148,19 +149,21 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           itemCount: twoTestItems.length,
                           itemBuilder: ((context, index) {
                             final TestSingleModel testItem =
-                            twoTestItems[index];
+                                twoTestItems[index];
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 TestCard(
-                                  testId: testItem.testId.toString(),
-                                  testName: testItem.testName,
-                                  testType: testItem.testType,
-                                  testQuestions: testItem.testQuestions,
-                                  testDescription: testItem.testDescription,
-                                  isPremium: testItem.isPremium,
-                                  testImg: testItem.testImg,
+                                  testDetails: TestSingleModel(
+                                    testId: testItem.testId,
+                                    testType: testItem.testType,
+                                    testName: testItem.testName,
+                                    testQuestions: testItem.testQuestions,
+                                    testDescription: testItem.testDescription,
+                                    isPremium: testItem.isPremium,
+                                    testImg: testItem.testImg,
+                                  ),
                                 ),
                                 if (index < 1) ...[
                                   const SizedBox(height: 15),

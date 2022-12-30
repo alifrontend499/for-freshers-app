@@ -21,12 +21,12 @@ import 'package:app/screens/all_tests/main_view.dart';
 // -- package | page transition
 import 'package:page_transition/page_transition.dart';
 
-class TestListingHeader extends StatelessWidget {
+class TestCardHeader extends StatelessWidget {
   final int testsCount;
   final String testType;
   final List<TestSingleModel> allTests;
 
-  const TestListingHeader({
+  const TestCardHeader({
     Key? key,
     required this.testsCount,
     required this.testType,

@@ -127,7 +127,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
       final onGoingTest = ref.read(ongoingTestProvider);
       // getting data from network
       final response =
-          await http.get(Uri.parse(apiGetTestQuestionsDetails(onGoingTest?.testId ?? '')));
+          await http.get(Uri.parse(apiGetTestQuestionsDetails(onGoingTest?.testId.toString() ?? '')));
       final responseStatusCode = response.statusCode;
       final responseBody = response.body;
       final responseBodyData = jsonDecode(responseBody);

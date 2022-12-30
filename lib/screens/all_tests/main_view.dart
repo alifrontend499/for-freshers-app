@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 // -- widget | global
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
+import 'package:app/global/components/global_test_card/test_card.dart';
 
 // -- models | global
 import 'package:app/global/models/test_model.dart';
 
 // -- components | screen
 import 'package:app/screens/all_tests/components/app_bar/app_bar_component.dart';
-import 'package:app/screens/home/components/tests_listing/test_card_component.dart';
 
 
 class AllTestsScreen extends StatefulWidget {
@@ -42,13 +42,15 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TestCard(
-                testId: item.testId.toString(),
-                testType: item.testType,
-                testName: item.testName,
-                testQuestions: item.testQuestions,
-                testDescription: item.testDescription,
-                isPremium: item.isPremium,
-                testImg: item.testImg,
+                testDetails: TestSingleModel(
+                  testId: item.testId,
+                  testType: item.testType,
+                  testName: item.testName,
+                  testQuestions: item.testQuestions,
+                  testDescription: item.testDescription,
+                  isPremium: item.isPremium,
+                  testImg: item.testImg,
+                ),
                 showDescription: true,
               ),
               const SizedBox(height: 15),

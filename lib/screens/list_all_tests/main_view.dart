@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 
 // -- global | widget
 import 'package:app/global/widget/navigation_drawer/navigation_drawer_widget.dart';
+import 'package:app/global/components/global_test_card/test_card.dart';
 
 // -- global | models
 import 'package:app/global/models/test_model.dart';
 
 // -- screen | components
 import 'package:app/screens/list_all_tests/components/app_bar/app_bar_component.dart';
-import 'package:app/screens/list_all_tests/components/tests_listing/tests_listing_header_component.dart';
-import 'package:app/screens/list_all_tests/components/tests_listing/test_card_component.dart';
 
 // -- screen | loading
 import 'package:app/screens/list_all_tests/loading/content_loading.dart';
@@ -140,13 +139,16 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   TestCard(
-                                    testId: testItem.testId.toString(),
-                                    testName: testItem.testName,
-                                    testType: testItem.testType,
-                                    testQuestions: testItem.testQuestions,
-                                    testDescription: testItem.testDescription,
-                                    isPremium: testItem.isPremium,
-                                    testImg: testItem.testImg,
+                                    testDetails: TestSingleModel(
+                                      testId: testItem.testId,
+                                      testType: testItem.testType,
+                                      testName: testItem.testName,
+                                      testQuestions: testItem.testQuestions,
+                                      testDescription: testItem.testDescription,
+                                      isPremium: testItem.isPremium,
+                                      testImg: testItem.testImg,
+                                    ),
+                                    showDescription: true,
                                   ),
                                 ],
                               );

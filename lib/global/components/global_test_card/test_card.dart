@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+// global | widget
+import 'package:app/global/dialogs/global_premium_test_dialog/premium_test_dialog.dart';
 // global | model
-import 'package:app/global/state/models/ongoing_test_model.dart';
+import 'package:app/global/models/test_model.dart';
 
 // -- state | global
 import 'package:app/global/state/global_state.dart';
@@ -21,31 +23,16 @@ import 'package:unicons/unicons.dart';
 // -- package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// dialog
-import 'package:app/screens/home/components/dialogs/premium_test_dialog.dart';
-
 // helpers
 import 'package:app/utilities/helpers/helpers.dart';
 
 class TestCard extends ConsumerWidget {
-  final String testId;
-  final String testType;
-  final String testName;
-  final String testQuestions;
-  final String testDescription;
-  final bool isPremium;
-  final String testImg;
+  final TestSingleModel testDetails;
   bool showDescription;
 
   TestCard({
     Key? key,
-    required this.testId,
-    required this.testType,
-    required this.testName,
-    required this.testQuestions,
-    required this.testDescription,
-    required this.isPremium,
-    required this.testImg,
+    required this.testDetails,
     this.showDescription = false,
   }) : super(key: key);
 
@@ -61,14 +48,14 @@ class TestCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(20),
           // color: Colors.white,
           image: DecorationImage(
-              // image: NetworkImage(testImg),
+            // image: NetworkImage(testImg),
               image: const NetworkImage(
                   'https://cdn.pixabay.com/photo/2014/06/03/19/38/board-361516__340.jpg'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                   Colors.white.withOpacity(0.2), BlendMode.modulate)
-              // opacity: .6,
-              ),
+            // opacity: .6,
+          ),
           // boxShadow: [
           //   BoxShadow(
           //     color: Colors.black.withOpacity(0.1),
@@ -88,13 +75,13 @@ class TestCard extends ConsumerWidget {
               children: [
                 // child | head
                 Text(
-                  getCapitalizeTextHelper(testType),
+                  getCapitalizeTextHelper(testDetails.testType),
                   style: screenStylesTestCardDifficulty,
                 ),
                 const SizedBox(height: 35),
 
                 Text(
-                  testName,
+                  testDetails.testName,
                   style: screenStylesTestCardHeading,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -102,7 +89,7 @@ class TestCard extends ConsumerWidget {
 
                 if (showDescription) ...[
                   Text(
-                    testDescription,
+                    testDetails.testDescription,
                     style: screenStylesTestCardDesc,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -111,14 +98,14 @@ class TestCard extends ConsumerWidget {
                 ],
 
                 Text(
-                  "$testQuestions Questions",
+                  "${testDetails.testQuestions} Questions",
                   style: screenStylesTestCardQuestions,
                 ),
               ],
             ),
 
             // -- child | premium icon
-            if (isPremium) ...[
+            if (testDetails.isPremium) ...[
               const Positioned(
                 right: 0,
                 child: Icon(
@@ -132,21 +119,15 @@ class TestCard extends ConsumerWidget {
         ),
       ),
       onTap: () {
-        if (isPremium) {
+        if (testDetails.isPremium) {
           // showing dialog
           showDialog(
             context: context,
-            builder: (context) => const PremiumTestDialog(),
+            builder: (context) => const GlobalPremiumTestDialog(),
           );
         } else {
           // setting global state
-          ref.watch(ongoingTestProvider.notifier).state = OngoingTestModel(
-            testId: '1',
-            testName: testName,
-            testImg: testImg,
-            testDescription: testDescription,
-            isPremium: isPremium,
-          );
+          ref.watch(ongoingTestProvider.notifier).state = testDetails;
 
           // moving to details screen
           Navigator.push(
