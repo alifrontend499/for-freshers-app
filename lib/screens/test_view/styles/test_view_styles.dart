@@ -23,18 +23,6 @@ ButtonStyle screenStylesCancelTestButton = ElevatedButton.styleFrom(
   ),
 );
 
-ButtonStyle screenStylesTestNavPrevButton = ElevatedButton.styleFrom(
-  minimumSize:
-      const Size(double.minPositive, globalSettingsDefaultButtonHeight),
-  backgroundColor: Colors.grey,
-  splashFactory: NoSplash.splashFactory,
-  textStyle: const TextStyle(
-      fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(5),
-  ),
-);
-
 ButtonStyle screenStylesTestNavNextButton(bool isEnabled) =>
     ElevatedButton.styleFrom(
       minimumSize:
@@ -54,9 +42,15 @@ ButtonStyle screenStylesTestNavNextButton(bool isEnabled) =>
 
 // test result styles
 const TextStyle screenStylesTestResultHead = TextStyle(
+  fontSize: 21,
+);
+const TextStyle screenStylesTestResultHeadPercentage = TextStyle(
   fontWeight: FontWeight.w600,
   fontSize: 21,
   color: globalColorAppPrimary,
+);
+const TextStyle screenStylesTestResultRightQuesText = TextStyle(
+  fontSize: 14,
 );
 
 TextStyle screenStylesCircularPercentageInsideText(double fontSize, FontWeight fontWeight) => TextStyle(

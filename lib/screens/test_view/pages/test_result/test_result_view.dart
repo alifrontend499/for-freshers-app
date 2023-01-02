@@ -1,3 +1,4 @@
+import 'package:app/global/models/test_model.dart';
 import 'package:app/screens/test_details/main_view.dart';
 import 'package:app/screens/test_view/main_view.dart';
 import 'package:flutter/material.dart';
@@ -34,44 +35,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/global/state/models/selected_answers_model.dart';
 
 class TestResultView extends ConsumerStatefulWidget {
-  const TestResultView({Key? key}) : super(key: key);
+  final double rightAnswersPercentage;
+  final int totalAnswersCount;
+  final int rightAnswersCount;
+  final int passPercentage;
+  final CompletedTestModal? completedTestDetails;
+
+  const TestResultView({
+    Key? key,
+    required this.rightAnswersPercentage,
+    required this.totalAnswersCount,
+    required this.rightAnswersCount,
+    required this.passPercentage,
+    required this.completedTestDetails,
+  }) : super(key: key);
 
   @override
   ConsumerState<TestResultView> createState() => _TestResultViewState();
 }
 
 class _TestResultViewState extends ConsumerState<TestResultView> {
-  double rightQuestionsPercentage = 0;
-  int totalQuestionsCount = 0;
-  int rightQuestionsCount = 0;
-  int passPercentage = 80;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    // initial checks
-    getData();
-  }
-
-  // getting selected question data from global state
-  Future<void> getData() async {
-    final List<SelectedAnswerModel> questionsData =
-        ref.read(selectedAnswersProvider);
-    final rightQuestions =
-        questionsData.where((element) => element.wasRight == true);
-    final int totalQuestionsCountRaw = questionsData.length;
-    final int rightQuestionsCountRaw = rightQuestions.length;
-    double percentage =
-        getPercentageHelper(questionsData.length, rightQuestions.length);
-    setState(() {
-      totalQuestionsCount = totalQuestionsCountRaw;
-      rightQuestionsCount = rightQuestionsCountRaw;
-      rightQuestionsPercentage = percentage;
-    });
-  }
-
   // on back pressed
   Future<bool> onWillPop() async {
     return false;
@@ -97,14 +80,14 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                         const Text(
                           RESULT_PAGE_HEADING,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 21),
+                          style: screenStylesTestResultHead,
                         ),
                         const SizedBox(height: 10),
                         Text(
                           RESULT_PAGE_HEADING_OTHER(
-                              rightQuestionsPercentage.toString()),
+                              widget.rightAnswersPercentage.toString()),
                           textAlign: TextAlign.center,
-                          style: screenStylesTestResultHead,
+                          style: screenStylesTestResultHeadPercentage,
                         ),
                       ],
                     ),
@@ -118,7 +101,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                           height: 160,
                           width: 160,
                           child: CircularProgressIndicator(
-                            value: rightQuestionsPercentage / 100,
+                            value: widget.rightAnswersPercentage / 100,
                             valueColor: const AlwaysStoppedAnimation(
                                 globalColorAppPrimary),
                             backgroundColor: Colors.black12,
@@ -136,7 +119,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      '$rightQuestionsCount',
+                                      '${widget.rightAnswersCount}',
                                       style:
                                           screenStylesCircularPercentageInsideText(
                                               25, FontWeight.w600),
@@ -150,7 +133,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                                     ),
                                     const SizedBox(width: 1),
                                     Text(
-                                      '$totalQuestionsCount',
+                                      '${widget.totalAnswersCount}',
                                       style:
                                           screenStylesCircularPercentageInsideText(
                                               19, FontWeight.w400),
@@ -160,9 +143,7 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                                 const SizedBox(height: 3),
                                 const Text(
                                   RESULT_PAGE_QUESTIONS_RIGHT,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                                  style: screenStylesTestResultRightQuesText,
                                 ),
                               ],
                             ),
@@ -174,14 +155,15 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
 
                     // other info
                     Text(
-                      rightQuestionsPercentage > passPercentage
-                          ? 'PASSED'
-                          : 'FAILED',
+                      widget.rightAnswersPercentage > widget.passPercentage
+                          ? RESULT_PAGE_TEST_PASSED
+                          : RESULT_PAGE_TEST_FAILED,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 25,
-                        color: rightQuestionsPercentage > passPercentage
+                        color: widget.rightAnswersPercentage >
+                                widget.passPercentage
                             ? Colors.green
                             : Colors.redAccent,
                       ),
@@ -189,12 +171,33 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                     const SizedBox(height: 8),
 
                     Text(
-                      rightQuestionsPercentage > passPercentage
-                          ? 'You have passed the test with ${rightQuestionsPercentage.toString()}% total score.'
-                          : 'You should score at least $passPercentage percent to pass the test. you can always try again',
+                      widget.rightAnswersPercentage > widget.passPercentage
+                          ? RESULT_PAGE_PASSED_TEST_MSG(
+                              widget.rightAnswersPercentage.toString())
+                          : RESULT_PAGE_FAILED_TEST_MSG(
+                              widget.passPercentage.toString()),
                       textAlign: TextAlign.center,
                       style:
                           const TextStyle(fontSize: 16, color: Colors.black87),
+                    ),
+                    const SizedBox(height: 15),
+
+                    InkWell(
+                      onTap: () {},
+                      highlightColor: globalColorInkWellHighlight,
+                      borderRadius: BorderRadius.circular(5),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 3, horizontal: 9),
+                        child: Text(
+                          RESULT_PAGE_TEST_SUMMARY,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: globalColorAppPrimary,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -208,7 +211,8 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // child | button | retry test
-                  if(rightQuestionsPercentage < passPercentage) ...[
+                  if (widget.rightAnswersPercentage <
+                      widget.passPercentage) ...[
                     ElevatedButton(
                       onPressed: () {
                         // deleting selected answer state

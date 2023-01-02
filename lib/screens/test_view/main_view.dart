@@ -11,6 +11,9 @@ import 'package:app/global/models/test_model.dart';
 // -- global | model
 import 'package:app/global/state/models/selected_answers_model.dart';
 
+// -- helpers | global
+import 'package:app/utilities/helpers/helpers.dart';
+
 // -- screen | consts
 import 'package:app/screens/test_view/test_view_consts.dart';
 
@@ -42,9 +45,7 @@ import 'package:app/screens/test_view/dialog/cancel_test_dialog.dart';
 import 'package:app/screens/test_view/pages/test_result/test_result_view.dart';
 
 class TestViewScreen extends ConsumerStatefulWidget {
-  const TestViewScreen({
-    Key? key
-  }) : super(key: key);
+  const TestViewScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<TestViewScreen> createState() => _TestViewScreenState();
@@ -56,6 +57,12 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   late int pagesCount = 0;
   int currentPage = 0;
   bool contentLoading = false;
+
+  // for result screen
+  double rightAnswersPercentage = 0;
+  int totalAnswersCount = 0;
+  int rightAnswersCount = 0;
+  int passPercentage = 80;
 
   @override
   void initState() {
@@ -70,8 +77,6 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
   }
 
   Future<void> initialStateSetup() async {
-    final dataNew = ref.watch(selectedAnswersProvider);
-
     // setting default for | setting global button enable/disable
     ref.read(isAnswerSelectedProvider.notifier).state = false;
     ref.read(isAnswerSelectedProvider.notifier).state = false;
@@ -119,6 +124,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     return optionsData;
   }
 
+  // getting questions data from network
   Future<void> getTestQuestions() async {
     // loading
     setState(() => contentLoading = true);
@@ -126,8 +132,8 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     try {
       final onGoingTest = ref.read(ongoingTestProvider);
       // getting data from network
-      final response =
-          await http.get(Uri.parse(apiGetTestQuestionsDetails(onGoingTest?.testId.toString() ?? '')));
+      final response = await http.get(Uri.parse(
+          apiGetTestQuestionsDetails(onGoingTest?.testId.toString() ?? '')));
       final responseStatusCode = response.statusCode;
       final responseBody = response.body;
       final responseBodyData = jsonDecode(responseBody);
@@ -135,7 +141,8 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
       if (responseStatusCode == 200) {
         final questionsData = responseData['question'];
-        final List<QuestionDataModel> questions = getQuestionsList(questionsData);
+        final List<QuestionDataModel> questions =
+            getQuestionsList(questionsData);
         List<Widget> widgetList = [];
         setState(() {
           pagesCount = questions.length;
@@ -177,12 +184,51 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     setState(() => contentLoading = false);
   }
 
+  // on back press
   Future<bool> onWillPop() async {
     showDialog(
       context: context,
       builder: (context) => CancelTestDialog(parentRef: ref),
     );
     return false;
+  }
+
+  // calculating answers percentage
+  Future<void> calculatingAnswersData() async {
+    final List<SelectedAnswerModel> selectedAnswersList =
+        ref.read(selectedAnswersProvider);
+    final Iterable<SelectedAnswerModel> rightAnswersList =
+        selectedAnswersList.where((element) => element.wasRight == true);
+    final int totalAnswersCountRaw = selectedAnswersList.length;
+    final int rightAnswersCountRaw = rightAnswersList.length;
+
+    setState(() {
+      totalAnswersCount = totalAnswersCountRaw;
+      rightAnswersCount = rightAnswersCountRaw;
+      rightAnswersPercentage = getPercentageHelper(
+          selectedAnswersList.length, rightAnswersList.length);
+    });
+  }
+
+  CompletedTestModal? saveCompletedTestDetails() {
+    final TestModel? onGoingTest = ref.read(ongoingTestProvider);
+    final List<SelectedAnswerModel> selectedAnswers =
+        ref.read(selectedAnswersProvider);
+
+    if (onGoingTest != null) {
+      final CompletedTestModal completedTest = CompletedTestModal(
+        isPremium: onGoingTest.isPremium,
+        selectedAnswers: selectedAnswers,
+        testDescription: onGoingTest.testDescription,
+        testId: onGoingTest.testId,
+        testImg: onGoingTest.testImg,
+        testName: onGoingTest.testName,
+        testQuestions: onGoingTest.testQuestions,
+        testType: onGoingTest.testType,
+      );
+      return completedTest;
+    }
+    return null;
   }
 
   @override
@@ -192,7 +238,8 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
 
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: getTestViewAppBar(context, onGoingTest?.testName ?? '', ref, contentLoading),
+      appBar: getTestViewAppBar(
+          context, onGoingTest?.testName ?? '', ref, contentLoading),
       body: WillPopScope(
         onWillPop: onWillPop,
         child: contentLoading
@@ -229,27 +276,12 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Row(
                       children: [
-                        // if (currentPage > 0) ...[
-                        //   // child | next button
-                        //   Expanded(
-                        //     child: ElevatedButton(
-                        //       style: screenStylesTestNavPrevButton,
-                        //       onPressed: () {
-                        //         setState(() => currentPage = currentPage - 1);
-                        //         controller.jumpToPage(currentPage);
-                        //       },
-                        //       child: const Text(TEST_ACTION_PREV),
-                        //     ),
-                        //   ),
-                        //   const SizedBox(width: 20),
-                        // ],
-
                         // child | next button
                         Expanded(
                           child: ElevatedButton(
                               style: screenStylesTestNavNextButton(
                                   isAnswerSelected),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (isAnswerSelected) {
                                   if (currentPage < (pagesCount - 1)) {
                                     // setting current page
@@ -265,12 +297,30 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                                         .read(isAnswerSelectedProvider.notifier)
                                         .state = false;
                                   } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const TestResultView(),
-                                      ),
-                                    );
+                                    // calculating answers percentage
+                                    await calculatingAnswersData();
+
+                                    // saving completed test details
+                                    final CompletedTestModal? completedTestDetails = saveCompletedTestDetails();
+
+                                    // moving to result page
+                                    if (mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => TestResultView(
+                                            rightAnswersPercentage:
+                                                rightAnswersPercentage,
+                                            totalAnswersCount:
+                                                totalAnswersCount,
+                                            rightAnswersCount:
+                                                rightAnswersCount,
+                                            passPercentage: passPercentage,
+                                            completedTestDetails: completedTestDetails,
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   }
                                 }
                               },

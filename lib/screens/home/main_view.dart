@@ -57,11 +57,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
     if (responseStatusCode == 200) {
       if (responseData.isNotEmpty) {
         for (final item in responseData) {
-          final List<TestSingleModel> allTestsOnly = [];
+          final List<TestModel> allTestsOnly = [];
 
           for (final singleTestItem in item['test']) {
             allTestsOnly.add(
-              TestSingleModel(
+              TestModel(
                 testId: singleTestItem['id'],
                 testType: singleTestItem['type'],
                 testName: singleTestItem['name'],
@@ -128,7 +128,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
                     final TestViewModel item = data[index];
-                    final List<TestSingleModel> twoTestItems =
+                    final List<TestModel> twoTestItems =
                         item.allTests.take(2).toList();
 
                     return Column(
@@ -148,14 +148,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           shrinkWrap: true,
                           itemCount: twoTestItems.length,
                           itemBuilder: ((context, index) {
-                            final TestSingleModel testItem =
+                            final TestModel testItem =
                                 twoTestItems[index];
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 TestCard(
-                                  testDetails: TestSingleModel(
+                                  testDetails: TestModel(
                                     testId: testItem.testId,
                                     testType: testItem.testType,
                                     testName: testItem.testName,

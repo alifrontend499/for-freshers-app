@@ -58,10 +58,10 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
     if (responseStatusCode == 200) {
       if (responseData.isNotEmpty) {
         for (final item in responseData) {
-          final List<TestSingleModel> allTestsOnly = [];
+          final List<TestModel> allTestsOnly = [];
 
           allTestsOnly.add(
-            TestSingleModel(
+            TestModel(
               testId: item['id'],
               testType: item['type'],
               testName: item['name'],
@@ -124,7 +124,7 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
                     final TestViewModel item = data[index];
-                    final List<TestSingleModel> allTestsData = item.allTests;
+                    final List<TestModel> allTestsData = item.allTests;
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -134,12 +134,12 @@ class _ListAllTestsScreenState extends State<ListAllTestsScreen> {
                             shrinkWrap: true,
                             itemCount: allTestsData.length,
                             itemBuilder: ((context, index) {
-                              final TestSingleModel testItem = allTestsData[index];
+                              final TestModel testItem = allTestsData[index];
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   TestCard(
-                                    testDetails: TestSingleModel(
+                                    testDetails: TestModel(
                                       testId: testItem.testId,
                                       testType: testItem.testType,
                                       testName: testItem.testName,

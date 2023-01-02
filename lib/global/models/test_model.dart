@@ -1,16 +1,8 @@
-// modal | for screen where user can click start test button
-class TestViewModel {
-  final String type;
-  final List<TestSingleModel> allTests;
-
-  TestViewModel({
-    required this.type,
-    required this.allTests,
-  });
-}
+// modals
+import 'package:app/global/state/models/selected_answers_model.dart';
 
 // modal | for a single test to test view
-class TestSingleModel {
+class TestModel {
   final int testId;
   final String testType;
   final String testName;
@@ -19,7 +11,7 @@ class TestSingleModel {
   final bool isPremium;
   final String testImg;
 
-  TestSingleModel({
+  TestModel({
     required this.testId,
     required this.testType,
     required this.testName,
@@ -28,29 +20,52 @@ class TestSingleModel {
     required this.isPremium,
     required this.testImg,
   });
-
-  Map<String, dynamic> toJson() => {
-    'testId': testId,
-    'testType': testType,
-    'testName': testName,
-    'testQuestions': testQuestions,
-    'testDescription': testDescription,
-    'isPremium': isPremium,
-    'testImg': testImg,
-  };
 }
 
-// modal | for a complete test that includes all the questions details as well
-class TestModel {
+class CompletedTestModal {
   final int testId;
   final String testType;
   final String testName;
-  final List<QuestionDataModel> testQuestions;
+  final String testQuestions;
+  final String testDescription;
+  final bool isPremium;
+  final String testImg;
+  final List<SelectedAnswerModel> selectedAnswers;
+
+  CompletedTestModal({
+    required this.testId,
+    required this.testType,
+    required this.testName,
+    required this.testQuestions,
+    required this.testDescription,
+    required this.isPremium,
+    required this.testImg,
+    required this.selectedAnswers,
+  });
+}
+
+// modal | for screen where user can click start test button
+class TestViewModel {
+  final String type;
+  final List<TestModel> allTests;
+
+  TestViewModel({
+    required this.type,
+    required this.allTests,
+  });
+}
+
+// modal | for a complete test that includes all the questions details as well
+class CompletedTestModel {
+  final int testId;
+  final String testType;
+  final String testName;
+  final String testQuestions;
   final String testDescription;
   final bool isPremium;
   final String testImg;
 
-  TestModel({
+  CompletedTestModel({
     required this.testId,
     required this.testType,
     required this.testName,

@@ -13,7 +13,7 @@ import 'package:app/screens/all_tests/components/app_bar/app_bar_component.dart'
 
 class AllTestsScreen extends StatefulWidget {
   final String testType;
-  final List<TestSingleModel> allTests;
+  final List<TestModel> allTests;
 
   const AllTestsScreen({
     Key? key,
@@ -42,7 +42,7 @@ class _AllTestsScreenState extends State<AllTestsScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TestCard(
-                testDetails: TestSingleModel(
+                testDetails: TestModel(
                   testId: item.testId,
                   testType: item.testType,
                   testName: item.testName,

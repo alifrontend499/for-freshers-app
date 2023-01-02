@@ -27,7 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/utilities/helpers/helpers.dart';
 
 class TestCard extends ConsumerWidget {
-  final TestSingleModel testDetails;
+  final TestModel testDetails;
   bool showDescription;
 
   TestCard({

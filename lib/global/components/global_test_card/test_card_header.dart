@@ -24,7 +24,7 @@ import 'package:page_transition/page_transition.dart';
 class TestCardHeader extends StatelessWidget {
   final int testsCount;
   final String testType;
-  final List<TestSingleModel> allTests;
+  final List<TestModel> allTests;
 
   const TestCardHeader({
     Key? key,

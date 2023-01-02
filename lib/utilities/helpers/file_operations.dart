@@ -25,7 +25,7 @@ Future<String> getCompletedTestsContent() async {
   return completedTestFile.readAsString();
 }
 
-Future<void> setCompletedTestHelper(TestSingleModel testData) async {
+Future<void> setCompletedTestHelper(TestModel testData) async {
 }
 
 // Future<void> setCompletedTestHelper() async {
