@@ -1,6 +1,6 @@
 import 'package:app/global/models/test_model.dart';
-import 'package:app/screens/test_details/main_view.dart';
 import 'package:app/screens/test_view/main_view.dart';
+import 'package:app/screens/test_view/pages/test_summary/test_summary_view.dart';
 import 'package:flutter/material.dart';
 
 // global | routes
@@ -15,9 +15,6 @@ import 'package:app/screens/test_view/styles/test_view_styles.dart';
 // -- settings | global
 import 'package:app/global/settings/global_settings.dart';
 
-// -- helpers | global
-import 'package:app/utilities/helpers/helpers.dart';
-
 // -- colors | global
 import 'package:app/global/colors/global_colors.dart';
 
@@ -25,21 +22,18 @@ import 'package:app/global/colors/global_colors.dart';
 import 'package:app/screens/test_view/pages/test_result/components/app_bar/app_bar_component.dart';
 
 // global | state
-import 'package:app/global/state/global_state.dart';
 import 'package:app/global/state/helpers/global_state_helper.dart';
 
 // package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// models
-import 'package:app/global/state/models/selected_answers_model.dart';
+import 'package:page_transition/page_transition.dart';
 
 class TestResultView extends ConsumerStatefulWidget {
   final double rightAnswersPercentage;
   final int totalAnswersCount;
   final int rightAnswersCount;
   final int passPercentage;
-  final CompletedTestModal? completedTestDetails;
+  final CompletedTestModal completedTestDetails;
 
   const TestResultView({
     Key? key,
@@ -183,7 +177,14 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                     const SizedBox(height: 15),
 
                     InkWell(
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: TestSummaryView(
+                            completedTestModal: widget.completedTestDetails,
+                          ),
+                        ),
+                      ),
                       highlightColor: globalColorInkWellHighlight,
                       borderRadius: BorderRadius.circular(5),
                       child: const Padding(

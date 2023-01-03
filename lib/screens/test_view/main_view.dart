@@ -210,25 +210,22 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     });
   }
 
-  CompletedTestModal? saveCompletedTestDetails() {
+  CompletedTestModal saveCompletedTestDetails() {
     final TestModel? onGoingTest = ref.read(ongoingTestProvider);
     final List<SelectedAnswerModel> selectedAnswers =
         ref.read(selectedAnswersProvider);
 
-    if (onGoingTest != null) {
-      final CompletedTestModal completedTest = CompletedTestModal(
-        isPremium: onGoingTest.isPremium,
-        selectedAnswers: selectedAnswers,
-        testDescription: onGoingTest.testDescription,
-        testId: onGoingTest.testId,
-        testImg: onGoingTest.testImg,
-        testName: onGoingTest.testName,
-        testQuestions: onGoingTest.testQuestions,
-        testType: onGoingTest.testType,
-      );
-      return completedTest;
-    }
-    return null;
+    final CompletedTestModal completedTest = CompletedTestModal(
+      isPremium: onGoingTest?.isPremium ?? false,
+      selectedAnswers: selectedAnswers,
+      testDescription: onGoingTest?.testDescription ?? '',
+      testId: onGoingTest?.testId ?? 0,
+      testImg: onGoingTest?.testImg ?? '',
+      testName: onGoingTest?.testName ?? '',
+      testQuestions: onGoingTest?.testQuestions ?? '',
+      testType: onGoingTest?.testType ?? '',
+    );
+    return completedTest;
   }
 
   @override
@@ -301,7 +298,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                                     await calculatingAnswersData();
 
                                     // saving completed test details
-                                    final CompletedTestModal? completedTestDetails = saveCompletedTestDetails();
+                                    final CompletedTestModal completedTestDetails = saveCompletedTestDetails();
 
                                     // moving to result page
                                     if (mounted) {
