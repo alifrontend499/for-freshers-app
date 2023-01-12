@@ -1,6 +1,7 @@
 import 'package:app/global/models/test_model.dart';
 import 'package:app/screens/test_view/main_view.dart';
 import 'package:app/screens/test_view/pages/test_summary/test_summary_view.dart';
+import 'package:app/utilities/helpers/file_operations.dart';
 import 'package:flutter/material.dart';
 
 // global | routes
@@ -33,7 +34,7 @@ class TestResultView extends ConsumerStatefulWidget {
   final int totalAnswersCount;
   final int rightAnswersCount;
   final int passPercentage;
-  final CompletedTestModal completedTestDetails;
+  final CompletedTestModel completedTestDetails;
 
   const TestResultView({
     Key? key,
@@ -51,7 +52,7 @@ class TestResultView extends ConsumerStatefulWidget {
 class _TestResultViewState extends ConsumerState<TestResultView> {
   // on back pressed
   Future<bool> onWillPop() async {
-    return false;
+    return true;
   }
 
   @override
@@ -215,17 +216,18 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                   if (widget.rightAnswersPercentage <
                       widget.passPercentage) ...[
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await deleteCompletedTestsFile();
                         // deleting selected answer state
-                        retryTestGlobalHelper(ref);
-
-                        // navigating to test
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TestViewScreen(),
-                          ),
-                        );
+                        // retryTestGlobalHelper(ref);
+                        //
+                        // // navigating to test
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const TestViewScreen(),
+                        //   ),
+                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(

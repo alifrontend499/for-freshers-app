@@ -1,7 +1,6 @@
-// modals
-import 'package:app/global/state/models/selected_answers_model.dart';
-
 // modal | for a single test to test view
+import 'dart:convert';
+
 class TestModel {
   final int testId;
   final String testType;
@@ -20,39 +19,16 @@ class TestModel {
     required this.isPremium,
     required this.testImg,
   });
-}
 
-class CompletedTestModal {
-  final int testId;
-  final String testType;
-  final String testName;
-  final String testQuestions;
-  final String testDescription;
-  final bool isPremium;
-  final String testImg;
-  final List<SelectedAnswerModel> selectedAnswers;
-
-  CompletedTestModal({
-    required this.testId,
-    required this.testType,
-    required this.testName,
-    required this.testQuestions,
-    required this.testDescription,
-    required this.isPremium,
-    required this.testImg,
-    required this.selectedAnswers,
-  });
-}
-
-// modal | for screen where user can click start test button
-class TestViewModel {
-  final String type;
-  final List<TestModel> allTests;
-
-  TestViewModel({
-    required this.type,
-    required this.allTests,
-  });
+  Map<String, dynamic> toJson() => {
+    'testId': testId,
+    'testType': testType,
+    'testName': testName,
+    'testQuestions': testQuestions,
+    'testDescription': testDescription,
+    'isPremium': isPremium,
+    'testImg': testImg,
+  };
 }
 
 // modal | for a complete test that includes all the questions details as well
@@ -64,25 +40,46 @@ class CompletedTestModel {
   final String testDescription;
   final bool isPremium;
   final String testImg;
+  final List<SelectedAnswerModel> selectedAnswers;
 
   CompletedTestModel({
     required this.testId,
     required this.testType,
     required this.testName,
     required this.testQuestions,
-    required this.isPremium,
     required this.testDescription,
+    required this.isPremium,
     required this.testImg,
+    required this.selectedAnswers,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'testId': testId,
+      'testType': testType,
+      'testName': testName,
+      'testQuestions': testQuestions,
+      'testDescription': testDescription,
+      'isPremium': isPremium,
+      'testImg': testImg,
+      'selectedAnswers': selectedAnswers.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+// modal | for screen where user can click start test button
+class TestViewModel {
+  final String type;
+  final List<TestModel> allTests;
+
+  TestViewModel({
+    required this.type,
+    required this.allTests,
   });
 
   Map<String, dynamic> toJson() => {
-    'testId': testId,
-    'testType': testType,
-    'testName': testName,
-    'testQuestions': testQuestions,
-    'testDescription': testDescription,
-    'isPremium': isPremium,
-    'testImg': testImg,
+    'type': type,
+    'allTests': allTests.map((e) => e.toJson()).toList(),
   };
 }
 
@@ -107,7 +104,7 @@ class QuestionDataModel {
     'quizId': quizId,
     'name': name,
     'imgUrl': imgUrl,
-    'options': options,
+    'options': options.map((e) => e.toJson()).toList(),
   };
 }
 
@@ -126,4 +123,39 @@ class OptionsDataModel {
     required this.description,
     required this.isRight,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'optionId': optionId,
+    'name': name,
+    'description': description,
+    'isRight': isRight,
+  };
+}
+
+// model | for a single answer selected
+class SelectedAnswerModel {
+  final String questionId;
+  final QuestionDataModel questionData;
+  final OptionsDataModel selectedOption;
+  final bool wasRight;
+  final DateTime selectedOn;
+
+  SelectedAnswerModel({
+    required this.questionId,
+    required this.questionData,
+    required this.selectedOption,
+    required this.wasRight,
+    required this.selectedOn,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'questionId': questionId,
+      'questionData': questionData.toJson(),
+      'selectedOption': selectedOption.toJson(),
+      'wasRight': wasRight,
+      'selectedOn': selectedOn.toIso8601String(),
+    };
+  }
 }

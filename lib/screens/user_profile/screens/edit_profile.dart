@@ -1,7 +1,10 @@
+import 'dart:convert';
+
+import 'package:app/global/consts/global_consts.dart';
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 
 // -- global |  imports
-import 'package:app/global/consts/global_consts.dart';
 import 'package:app/global/colors/global_colors.dart';
 
 // -- auth | imports
@@ -14,6 +17,12 @@ import 'package:app/screens/user_profile/components/app_bar/app_bar_component.da
 // -- utilities |  imports
 import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
 
+// http
+import 'package:http/http.dart' as http;
+
+// apis
+import 'package:app/utilities/apis/all_apis.dart';
+
 class EditProfileScreen extends StatefulWidget {
   final AuthUserModel userDetails;
 
@@ -25,6 +34,17 @@ class EditProfileScreen extends StatefulWidget {
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
+
+// snackbar - messages
+SnackBar snackBarErrorMessage(String msg) => SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.redAccent,
+    );
+
+SnackBar snackBarSuccessMessage(String msg) => SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.greenAccent,
+    );
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final String tempUserImg =
@@ -61,8 +81,66 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // loading
       setState(() => submitBtnLoading = true);
 
-      // network request
-      Future.delayed(const Duration(seconds: 1));
+      try {
+        // getting current user details
+        final String userToken = await getUserTokenHelper();
+        final response = await http.post(
+          Uri.parse(apiEditProfilePassword),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $userToken'
+          },
+          body: jsonEncode(
+            <String, String>{
+              'name': fieldFulName,
+              'email': fieldEmail,
+              'phone': fieldPhone,
+            },
+          ),
+        );
+        final responseStatusCode = response.statusCode;
+        final responseBodyJson = response.body;
+        final responseBody = jsonDecode(responseBodyJson);
+        print('responseStatusCode $responseStatusCode');
+        print('responseBody $responseBodyJson');
+
+        if (responseStatusCode == 200) {
+          final responseData = responseBody['data'];
+          final AuthUserModel authUserToStore = AuthUserModel(
+              userToken: responseData['token'],
+              userId: responseData['userid'].toString(),
+              userName: responseData['name'],
+              userEmail: responseData['email'],
+              userPhone: responseData['phone'].toString(),
+              userProfileImg: responseData['image']);
+          // setting auth user
+          setUserDetailsHelper(authUserToStore);
+          // setting user token
+          setUserTokenHelper(responseData['token']);
+
+          if (mounted) {
+            // showing message
+            ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage(
+                responseBody['message']
+                    ? responseBody['message']
+                    : AUTH_RESPONSE_PROFILE_EDIT_SUCCESS));
+
+            // redirecting back
+            Navigator.pop(context);
+          }
+        } else {
+          // showing message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              snackBarErrorMessage(responseBody['message']
+                  ? responseBody['message']
+                  : GLOBAL_UNKNOWN_ERROR_OCCURRED),
+            );
+          }
+        }
+      } catch (err) {
+        print('Error Occurred: $err');
+      }
 
       // loading
       setState(() => submitBtnLoading = false);
@@ -170,100 +248,97 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           bottom: 7,
           child: InkWell(
             onTap: () => showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => Container(
-                  padding: const EdgeInsets.only(top: 10, bottom: 15, left: 15, right: 15),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // child | top indicator
-                      Container(
-                        height: 6,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey,
-                        ),
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => Container(
+                padding: const EdgeInsets.only(
+                    top: 10, bottom: 15, left: 15, right: 15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // child | top indicator
+                    Container(
+                      height: 6,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey,
                       ),
-                      const SizedBox(height: 15),
+                    ),
+                    const SizedBox(height: 15),
 
-
-                      // child | link
-                      InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(5),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: globalColorAppPrimary,
-                                ),
-                                child: const Icon(
-                                  Icons.camera,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
+                    // child | link
+                    InkWell(
+                      onTap: () {},
+                      borderRadius: BorderRadius.circular(5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: globalColorAppPrimary,
                               ),
-                              const SizedBox(width: 15),
-
-                              const Text(
-                                'Use Camera',
-                                style: TextStyle(
+                              child: const Icon(
+                                Icons.camera,
+                                size: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            const Text(
+                              'Use Camera',
+                              style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  letterSpacing: .7
-                                ),
-                              ),
-                            ],
-                          ),
+                                  letterSpacing: .7),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 1),
+                    ),
+                    const SizedBox(height: 1),
 
-                      // child | link
-                      InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(5),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: globalColorAppPrimary,
-                                ),
-                                child: const Icon(
-                                  Icons.perm_media_outlined,
-                                  size: 15,
-                                  color: Colors.white,
-                                ),
+                    // child | link
+                    InkWell(
+                      onTap: () {},
+                      borderRadius: BorderRadius.circular(5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: globalColorAppPrimary,
                               ),
-                              const SizedBox(width: 15),
-
-                              const Text(
-                                'Choose from Gallery',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: .7,
-                                ),
+                              child: const Icon(
+                                Icons.perm_media_outlined,
+                                size: 15,
+                                color: Colors.white,
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 15),
+                            const Text(
+                              'Choose from Gallery',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: .7,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-
-
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
             ),
             highlightColor: Colors.transparent,
             child: Container(

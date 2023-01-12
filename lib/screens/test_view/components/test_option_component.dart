@@ -12,9 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // --global | state
 import 'package:app/global/state/global_state.dart';
 
-// -- global | model
-import 'package:app/global/state/models/selected_answers_model.dart';
-
 // -- global state | helpers
 import 'package:app/global/state/helpers/global_state_helper.dart';
 

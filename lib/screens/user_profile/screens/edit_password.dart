@@ -1,8 +1,6 @@
+import 'dart:convert';
+import 'package:app/utilities/helpers/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
-
-// -- global |  imports
-import 'package:app/global/consts/global_consts.dart';
-import 'package:app/global/colors/global_colors.dart';
 
 // -- auth | imports
 import 'package:app/screens/auth/auth_consts.dart';
@@ -11,8 +9,22 @@ import 'package:app/screens/auth/styles/auth_styles.dart';
 // -- screen |  imports
 import 'package:app/screens/user_profile/components/app_bar/app_bar_component.dart';
 
-// -- utilities |  imports
-import '../../../utilities/helpers/shared_preferences/model/shared_preferences_auth_model.dart';
+// http
+import 'package:http/http.dart' as http;
+
+// apis
+import 'package:app/utilities/apis/all_apis.dart';
+
+// snackbar - messages
+SnackBar snackBarErrorMessage(String msg) => SnackBar(
+  content: Text(msg),
+  backgroundColor: Colors.redAccent,
+);
+
+SnackBar snackBarSuccessMessage(String msg) => SnackBar(
+      content: Text(msg),
+      backgroundColor: Colors.greenAccent,
+    );
 
 class EditPasswordScreen extends StatefulWidget {
   const EditPasswordScreen({Key? key}) : super(key: key);
@@ -24,10 +36,11 @@ class EditPasswordScreen extends StatefulWidget {
 class _EditPasswordScreenState extends State<EditPasswordScreen> {
   final formKey = GlobalKey<FormState>();
   String fieldOldPassword = '';
-  String fieldPassword = '';
-  String fieldConfirmPassword = '';
-  bool isPasswordVisible = true;
-  bool isConfirmPasswordVisible = true;
+  String fieldNewPassword = '';
+  String fieldConfirmNewPassword = '';
+  bool isOldPasswordVisible = true;
+  bool isNewPasswordVisible = true;
+  bool isConfirmNewPasswordVisible = true;
   bool submitBtnLoading = false;
 
   void onSubmit() async {
@@ -42,11 +55,48 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
       // loading
       setState(() => submitBtnLoading = true);
 
-      // network request
-      Future.delayed(const Duration(seconds: 1));
+      try {
+        // getting current user details
+        final String userToken = await getUserTokenHelper();
+        final response = await http.post(
+          Uri.parse(apiChangePassword),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $userToken'
+          },
+          body: jsonEncode(
+            <String, String>{
+              'old_password': fieldOldPassword,
+              'new_password': fieldNewPassword,
+            },
+          ),
+        );
+        final responseStatusCode = response.statusCode;
+        final responseBodyJson = response.body;
+        final responseBody = jsonDecode(responseBodyJson);
+
+        if (responseStatusCode == 200) {
+          if (mounted) {
+            // showing message
+            ScaffoldMessenger.of(context).showSnackBar(snackBarSuccessMessage(AUTH_RESPONSE_PASSWORD_CHANGED_SUCCESS));
+
+            // redirecting back
+            Navigator.pop(context);
+          }
+        } else {
+          // showing message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(snackBarErrorMessage(responseBody['message']));
+          }
+        }
+      } catch (err) {
+        print('Error Occurred: $err');
+      }
 
       // loading
-      setState(() => submitBtnLoading = false);
+      setState(() {
+        submitBtnLoading = false;
+      });
     }
   }
 
@@ -115,12 +165,23 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   Widget buildOldPasswordField() {
     return TextFormField(
       style: authStylesInput,
+      obscureText: isOldPasswordVisible,
       decoration: InputDecoration(
         hintText: INPUT_HINT_OLD_PASSWORD,
         border: authStylesInputBorder,
         focusedBorder: authStylesInputBorderFocused,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+        suffixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              isOldPasswordVisible = !isOldPasswordVisible;
+            });
+          },
+          icon: isNewPasswordVisible
+              ? const Icon(Icons.visibility_off)
+              : const Icon(Icons.visibility),
+        ),
       ),
       onChanged: (value) => setState(() => fieldOldPassword = value!),
       validator: (value) {
@@ -138,9 +199,9 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   Widget buildPasswordField() {
     return TextFormField(
       style: authStylesInput,
-      obscureText: isPasswordVisible,
+      obscureText: isNewPasswordVisible,
       decoration: InputDecoration(
-        hintText: INPUT_HINT_PASSWORD,
+        hintText: INPUT_HINT_NEW_PASSWORD,
         border: authStylesInputBorder,
         focusedBorder: authStylesInputBorderFocused,
         contentPadding:
@@ -148,19 +209,22 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {
-              isPasswordVisible = !isPasswordVisible;
+              isNewPasswordVisible = !isNewPasswordVisible;
             });
           },
-          icon: isPasswordVisible
+          icon: isNewPasswordVisible
               ? const Icon(Icons.visibility_off)
               : const Icon(Icons.visibility),
         ),
       ),
-      onChanged: (value) => setState(() => fieldPassword = value!),
+      onChanged: (value) => setState(() => fieldNewPassword = value!),
       validator: (value) {
         if (value!.isEmpty) {
           // checking for empty value
           return VALIDATION_ERROR_EMPTY_FIELD;
+        } else if (fieldNewPassword.length < 6) {
+          // checking for empty value
+          return VALIDATION_ERROR_6_CHARACTERS_LONG;
         }
         return null;
       },
@@ -172,9 +236,9 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   Widget buildConfirmPasswordField() {
     return TextFormField(
       style: authStylesInput,
-      obscureText: isConfirmPasswordVisible,
+      obscureText: isConfirmNewPasswordVisible,
       decoration: InputDecoration(
-        hintText: INPUT_HINT_CONFIRM_PASSWORD,
+        hintText: INPUT_HINT_CONFIRM_NEW_PASSWORD,
         border: authStylesInputBorder,
         focusedBorder: authStylesInputBorderFocused,
         contentPadding:
@@ -182,20 +246,23 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {
-              isConfirmPasswordVisible = !isConfirmPasswordVisible;
+              isConfirmNewPasswordVisible = !isConfirmNewPasswordVisible;
             });
           },
-          icon: isConfirmPasswordVisible
+          icon: isConfirmNewPasswordVisible
               ? const Icon(Icons.visibility_off)
               : const Icon(Icons.visibility),
         ),
       ),
-      onChanged: (value) => setState(() => fieldConfirmPassword = value!),
+      onChanged: (value) => setState(() => fieldConfirmNewPassword = value!),
       validator: (value) {
         if (value!.isEmpty) {
           // checking for empty value
           return VALIDATION_ERROR_EMPTY_FIELD;
-        } else if (fieldConfirmPassword != fieldPassword) {
+        } else if (fieldConfirmNewPassword.length < 6) {
+          // checking for empty value
+          return VALIDATION_ERROR_6_CHARACTERS_LONG;
+        } else if (fieldConfirmNewPassword != fieldNewPassword) {
           // checking for empty value
           return VALIDATION_ERROR_VALID_CONFIRM_PASSWORD;
         }

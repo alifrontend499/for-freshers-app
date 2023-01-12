@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app/utilities/helpers/file_operations.dart';
 import 'package:flutter/material.dart';
 
 // screen | loading
@@ -7,9 +8,6 @@ import 'package:app/screens/test_view/loading/content_loading_question.dart';
 
 // -- models | global
 import 'package:app/global/models/test_model.dart';
-
-// -- global | model
-import 'package:app/global/state/models/selected_answers_model.dart';
 
 // -- helpers | global
 import 'package:app/utilities/helpers/helpers.dart';
@@ -210,12 +208,12 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
     });
   }
 
-  CompletedTestModal saveCompletedTestDetails() {
+  CompletedTestModel saveCompletedTestDetails() {
     final TestModel? onGoingTest = ref.read(ongoingTestProvider);
     final List<SelectedAnswerModel> selectedAnswers =
         ref.read(selectedAnswersProvider);
 
-    final CompletedTestModal completedTest = CompletedTestModal(
+    final CompletedTestModel completedTest = CompletedTestModel(
       isPremium: onGoingTest?.isPremium ?? false,
       selectedAnswers: selectedAnswers,
       testDescription: onGoingTest?.testDescription ?? '',
@@ -298,7 +296,10 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
                                     await calculatingAnswersData();
 
                                     // saving completed test details
-                                    final CompletedTestModal completedTestDetails = saveCompletedTestDetails();
+                                    final CompletedTestModel completedTestDetails = saveCompletedTestDetails();
+
+                                    // setting completed test
+                                    await setCompletedTestHelper(completedTestDetails);
 
                                     // moving to result page
                                     if (mounted) {

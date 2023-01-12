@@ -87,6 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
         final responseStatusCode = response.statusCode;
         final responseBodyJson = response.body;
+        print('responseBodyJson $responseBodyJson');
         final responseBody = jsonDecode(responseBodyJson);
 
         if (responseStatusCode == 200) {

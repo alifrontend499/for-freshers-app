@@ -83,9 +83,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final responseStatusCode = response.statusCode;
         final responseBody = response.body;
 
-        // print('response responseStatusCode $responseStatusCode');
-        // print('response responseBody $responseBody');
-
         if (responseStatusCode == 200) {
           if (mounted) {
             // showing message
@@ -339,6 +336,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (value!.isEmpty) {
           // checking for empty value
           return VALIDATION_ERROR_EMPTY_FIELD;
+        } else if (fieldPassword.length < 6) {
+          // checking for empty value
+          return VALIDATION_ERROR_6_CHARACTERS_LONG;
         }
         return null;
       },
@@ -371,6 +371,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (value!.isEmpty) {
           // checking for empty value
           return VALIDATION_ERROR_EMPTY_FIELD;
+        } else if (fieldConfirmPassword.length < 6) {
+          // checking for empty value
+          return VALIDATION_ERROR_6_CHARACTERS_LONG;
         } else if(fieldConfirmPassword != fieldPassword) {
           // checking for empty value
           return VALIDATION_ERROR_VALID_CONFIRM_PASSWORD;

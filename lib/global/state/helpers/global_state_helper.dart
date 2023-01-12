@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-// models
-import 'package:app/global/state/models/selected_answers_model.dart';
-
 // global | state
 import 'package:app/global/state/global_state.dart';
 
 // package | riverpod
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../models/test_model.dart';
 
 // to update selected answers
 void updateSelectedAnswersProviderGlobalHelper(WidgetRef ref, SelectedAnswerModel newItem) {

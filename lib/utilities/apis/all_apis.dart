@@ -12,3 +12,7 @@ const String apiLoginEndPoint = 'user/login';
 const String apiLogin = path + apiLoginEndPoint;
 const String apiRegisterEndPoint = 'user/register';
 const String apiRegister = path + apiRegisterEndPoint;
+const String apiChangePasswordEndPoint = 'resetpassword';
+const String apiChangePassword = path + apiChangePasswordEndPoint;
+const String apiEditProfileEndPoint = 'editprofile';
+const String apiEditProfilePassword = path + apiEditProfileEndPoint;
