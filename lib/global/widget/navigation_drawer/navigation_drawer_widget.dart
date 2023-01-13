@@ -1,3 +1,4 @@
+import 'package:app/screens/completed_tests/main_view.dart';
 import 'package:flutter/material.dart';
 
 // -- package | imports
@@ -175,35 +176,33 @@ class _GlobalNavigationDrawerState
                         const SizedBox(height: nbLinkBottomGap),
 
                         // child | link
-                        // navigationLink(
-                        //   () {
-                        //     if (!checkIsActive(activeRouteName,
-                        //         GLOBAL_ROUTE_ID_COMPLETED_TESTS)) {
-                        //       setPageRoute(
-                        //           ref, GLOBAL_ROUTE_ID_COMPLETED_TESTS);
-                        //     }
-                        //   },
-                        //   Icons.check_circle_outlined,
-                        //   'Completed Tests',
-                        //   isActive: checkIsActive(
-                        //       activeRouteName, GLOBAL_ROUTE_ID_COMPLETED_TESTS),
-                        // ),
-                        // const SizedBox(height: nbLinkBottomGap),
+                        navigationLink(
+                              () {
+                            // closing the drawer
+                            Navigator.pop(context);
 
-                        // child | link
-                        // navigationLink(
-                        //   () {
-                        //     if (!checkIsActive(activeRouteName,
-                        //         GLOBAL_ROUTE_ID_PENDING_TESTS)) {
-                        //       setPageRoute(ref, GLOBAL_ROUTE_ID_PENDING_TESTS);
-                        //     }
-                        //   },
-                        //   Icons.timelapse_sharp,
-                        //   'Pending Tests',
-                        //   isActive: checkIsActive(
-                        //       activeRouteName, GLOBAL_ROUTE_ID_PENDING_TESTS),
-                        // ),
-                        // const SizedBox(height: nbLinkBottomGap),
+                            if (!checkIsActive(
+                                activeRouteName, GLOBAL_ROUTE_ID_COMPLETED_TESTS)) {
+                              // setting current page route
+                              setPageRoute(ref, GLOBAL_ROUTE_ID_COMPLETED_TESTS);
+
+                              // navigation to page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) =>
+                                  const CompletedTestsScreen()),
+                                ),
+                              );
+                            }
+                          },
+                          Icons.lightbulb_circle_outlined,
+                          'Completed Tests',
+                          isActive: checkIsActive(
+                              activeRouteName, GLOBAL_ROUTE_ID_COMPLETED_TESTS),
+                        ),
+                        const SizedBox(height: nbLinkBottomGap),
+
 
                         // child | link
                         navigationLink(() {

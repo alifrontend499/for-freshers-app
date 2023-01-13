@@ -52,7 +52,7 @@ class TestResultView extends ConsumerStatefulWidget {
 class _TestResultViewState extends ConsumerState<TestResultView> {
   // on back pressed
   Future<bool> onWillPop() async {
-    return true;
+    return false;
   }
 
   @override
@@ -217,17 +217,16 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                       widget.passPercentage) ...[
                     ElevatedButton(
                       onPressed: () async {
-                        await deleteCompletedTestsFile();
                         // deleting selected answer state
-                        // retryTestGlobalHelper(ref);
-                        //
-                        // // navigating to test
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const TestViewScreen(),
-                        //   ),
-                        // );
+                        retryTestGlobalHelper(ref);
+
+                        // navigating to test
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TestViewScreen(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(

@@ -39,6 +39,12 @@ class _TestDetailsScreenState extends ConsumerState<TestDetailsScreen> {
   final String defaultTestDescription = '';
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final onGoingTest = ref.read(ongoingTestProvider);
     return Scaffold(
