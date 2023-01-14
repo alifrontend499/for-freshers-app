@@ -223,6 +223,7 @@ class _TestViewScreenState extends ConsumerState<TestViewScreen> {
       testQuestions: onGoingTest?.testQuestions ?? '',
       testType: onGoingTest?.testType ?? '',
       completedOn: DateTime.now(),
+      rightAnswersCount: rightAnswersCount,
     );
     return completedTest;
   }
