@@ -27,6 +27,11 @@ const TextStyle stylesLinkText = TextStyle(
   fontWeight: FontWeight.w600,
   color: globalColorAppPrimary,
 );
+const TextStyle stylesLinkTextSmall = TextStyle(
+  fontWeight: FontWeight.w600,
+  color: globalColorAppPrimary,
+  fontSize: 13,
+);
 
 const TextStyle stylesTestHeading = TextStyle(
   fontSize: 20,

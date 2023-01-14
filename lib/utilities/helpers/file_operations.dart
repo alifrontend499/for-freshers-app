@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 const String completedTestsFileName = 'completedTestsByUser.txt';
 // -- function | get complete test file
 Future<File> getCompletedTestsFile() async {
-  Directory tempDir = await getTemporaryDirectory();
+  Directory tempDir = await getApplicationDocumentsDirectory();
   return File("${tempDir.path}/$completedTestsFileName");
 }
 
@@ -53,6 +53,18 @@ Future<bool> checkIfCompletedTestExistHelper(int testId) async {
   }
   return false;
 }
+// -- helper | check if the test exist according to id
+Future<CompletedTestModel?> getCompletedTestByIdHelper(int testId) async {
+  final isFileExist = await isCompletedTestsFileExist();
+  if (isFileExist) {
+    final List<CompletedTestModel> completedTests = await getCompletedTestsHelper();
+    final completedTestSingle = completedTests.where((e) => e.testId == testId);
+    if(completedTestSingle.isNotEmpty) {
+      return completedTestSingle.first;
+    }
+  }
+  return null;
+}
 
 // -- helper | get all the tests
 Future<List<CompletedTestModel>> getCompletedTestsHelper() async {
@@ -76,7 +88,7 @@ Future<List<CompletedTestModel>> getCompletedTestsHelper() async {
 Future<void> setCompletedTestHelper(CompletedTestModel completedTest) async {
   String dataToSave = '';
   final List<CompletedTestModel> existingCompletedTests = await getCompletedTestsHelper();
-  if (existingCompletedTests.isEmpty) {
+  if (existingCompletedTests.isNotEmpty) {
     // adding to existing data
     existingCompletedTests.add(completedTest);
 
@@ -90,12 +102,13 @@ Future<void> setCompletedTestHelper(CompletedTestModel completedTest) async {
   await updateCompletedTestsFile(dataToSave);
 }
 
+// -- helper | delete single completed test
 Future<void> deleteSingleCompletedTestHelper(int testId) async {
   final isFileExist = await isCompletedTestsFileExist();
   if (isFileExist) {
     String dataToSave = '';
     final List<CompletedTestModel> completedTests = await getCompletedTestsHelper();
-    final otherTests = completedTests.where((e) => e.testId != testId);
+    final List<CompletedTestModel> otherTests = completedTests.where((e) => e.testId != testId).toList();
     if(otherTests.isNotEmpty) {
       dataToSave = jsonEncode(otherTests);
     } else {

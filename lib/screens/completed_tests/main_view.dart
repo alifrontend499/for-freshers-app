@@ -77,7 +77,7 @@ class _CompletedTestsScreenState extends State<CompletedTestsScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.testName),
+                        Text("${item.testId}. ${item.completedOn}"),
                         const SizedBox(height: 10),
                       ],
                     );

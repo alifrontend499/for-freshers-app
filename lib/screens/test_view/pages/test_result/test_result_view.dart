@@ -217,16 +217,16 @@ class _TestResultViewState extends ConsumerState<TestResultView> {
                       widget.passPercentage) ...[
                     ElevatedButton(
                       onPressed: () async {
+                        // deleting test from storage (completed test list)
+                        await deleteSingleCompletedTestHelper(widget.completedTestDetails.testId);
+
                         // deleting selected answer state
                         retryTestGlobalHelper(ref);
 
-                        // navigating to test
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TestViewScreen(),
-                          ),
-                        );
+                        if(mounted) {
+                          // navigating to test
+                          Navigator.pushNamed(context, testViewScreenRoute);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(

@@ -13,3 +13,24 @@ String getCapitalizeTextHelper(String test) =>
 double getPercentageHelper(int total, int value) {
   return value / total * 100;
 }
+
+// get Date
+String getDateHelper(DateTime data) {
+  final List<String> monthsNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Nov",
+    "Dec",
+  ];
+  final int month = data.month;
+  final String year = data.year.toString();
+  final String day = data.day.toString();
+  return "${monthsNames[month]} $day $year";
+}

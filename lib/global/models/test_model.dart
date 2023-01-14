@@ -41,6 +41,7 @@ class CompletedTestModel {
   final bool isPremium;
   final String testImg;
   final List<SelectedAnswerModel> selectedAnswers;
+  final DateTime completedOn;
 
   CompletedTestModel({
     required this.testId,
@@ -51,6 +52,7 @@ class CompletedTestModel {
     required this.isPremium,
     required this.testImg,
     required this.selectedAnswers,
+    required this.completedOn,
   });
 
   factory CompletedTestModel.fromJson(Map<String, dynamic> json) {
@@ -65,6 +67,7 @@ class CompletedTestModel {
       isPremium: json['isPremium'],
       testImg: json['testImg'],
       selectedAnswers: selectedAnswersData,
+      completedOn: DateTime.parse(json['completedOn']),
     );
   }
 
@@ -78,6 +81,7 @@ class CompletedTestModel {
       'isPremium': isPremium,
       'testImg': testImg,
       'selectedAnswers': selectedAnswers.map((e) => e.toJson()).toList(),
+      'completedOn': completedOn.toIso8601String(),
     };
   }
 }
